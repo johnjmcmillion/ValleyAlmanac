@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valley Almanac — Fishing & Farming, A Stardew Fan Guide</title>
+<meta name="description" content="The complete unofficial Stardew Valley fan guide. Interactive crop planner with fertilizer modifiers, full fishing database, Community Center bundle tracker with progress saving, and villager gift guide. Data verified for v1.6.">
+<meta name="keywords" content="Stardew Valley, crop guide, fishing guide, community center bundles, gift guide, farming, Stardew Valley 1.6, valley almanac">
+<meta name="author" content="Valley Almanac">
+<meta property="og:title" content="Valley Almanac — Stardew Fan Guide">
+<meta property="og:description" content="Interactive crops, fishing, bundle tracker & gift guide for Stardew Valley 1.6. All in one page — no ads, no login.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Valley Almanac — Stardew Fan Guide">
+<meta name="twitter:description" content="Interactive crops, fishing, bundle tracker & gift guide for Stardew Valley 1.6.">
+<!-- Update these two with your real URL once hosted -->
+<meta property="og:url" content="https://valleyalmanac.com/">
+<link rel="canonical" href="https://valleyalmanac.com/">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap');
+:root{
+  --spring-bg:#d4f0c0;--spring-header:#5a9c3a;--spring-row:#eaf7df;--spring-alt:#d0eebc;--spring-border:#7ec850;--spring-text:#2d5a1b;
+  --summer-bg:#fff3b0;--summer-header:#d4860a;--summer-row:#fffadd;--summer-alt:#fff0a0;--summer-border:#f5c842;--summer-text:#6b3d00;
+  --fall-bg:#ffe5c0;--fall-header:#c05010;--fall-row:#fff0e0;--fall-alt:#ffddb8;--fall-border:#e07030;--fall-text:#5a1e00;
+  --winter-bg:#d0ecff;--winter-header:#2060a0;--winter-row:#e8f5ff;--winter-alt:#c8e4f8;--winter-border:#70b0e0;--winter-text:#0a2050;
+  --multi-bg:#f0d8ff;--multi-header:#7030a0;--multi-row:#f8f0ff;--multi-alt:#ead0f8;--multi-border:#b070d8;--multi-text:#300060;
+  --fish-bg:#0a1a3a;--fish-header:#1060c0;--fish-border:#3090e0;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#1a0e2e;background-image:radial-gradient(ellipse at 20% 10%,rgba(90,50,150,.3) 0%,transparent 50%),radial-gradient(ellipse at 80% 90%,rgba(30,80,40,.3) 0%,transparent 50%);font-family:'VT323',monospace;color:#fff;min-height:100vh;padding:24px 16px;}
+.page-wrap{max-width:1120px;margin:0 auto;}
+.title-block{text-align:center;margin-bottom:28px;}
+h1.title-main{margin:0;padding:0;font-size:clamp(13px,2.5vw,21px);}
+.title-main{font-family:'Press Start 2P',monospace;font-size:clamp(13px,2.5vw,21px);color:#ffe97a;text-shadow:3px 3px 0 #8b5e00,6px 6px 0 rgba(0,0,0,.4);letter-spacing:2px;line-height:1.6;margin-bottom:6px;}
+.title-sub{font-size:22px;color:#c8e8a0;text-shadow:1px 1px 0 #2a5010;letter-spacing:3px;}
+.stars{font-size:22px;letter-spacing:6px;margin:6px 0;animation:twinkle 2s infinite alternate;}
+@keyframes twinkle{from{opacity:.6}to{opacity:1}}
+
+/* ── TOP NAV ── */
+.top-nav{display:flex;gap:10px;justify-content:center;margin-bottom:26px;flex-wrap:wrap;}
+.nav-btn{font-family:'Press Start 2P',monospace;font-size:9px;padding:12px 20px;border:3px solid;border-radius:8px;cursor:pointer;transition:all .18s;letter-spacing:.5px;}
+.nav-btn.farming{background:#2a5a10;color:#c0ffb0;border-color:#60c030;}
+.nav-btn.fishing{background:#0a2a6a;color:#90d0ff;border-color:#3090e0;}
+.nav-btn.bundles{background:#5a3a00;color:#ffd890;border-color:#c08020;}
+.nav-btn.gifts{background:#5a0a40;color:#ffb0e0;border-color:#c040a0;}
+.nav-btn:not(.active){filter:brightness(.55);transform:scale(.95);}
+.nav-btn.active{filter:brightness(1);transform:scale(1);box-shadow:0 0 16px rgba(255,255,255,.18);}
+.nav-btn:hover:not(.active){filter:brightness(.78);}
+
+/* ── SECTIONS ── */
+.section{display:none;}
+.section.active{display:block;}
+
+/* ── MODIFIER PANEL ── */
+.modifier-panel{background:rgba(0,0,0,.45);border:2px solid rgba(255,255,255,.18);border-radius:12px;padding:16px 20px;margin-bottom:22px;}
+.modifier-panel h3{font-family:'Press Start 2P',monospace;font-size:9px;color:#ffe97a;margin-bottom:14px;letter-spacing:1px;}
+.mod-row{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-bottom:10px;}
+.mod-label{font-size:15px;color:#c8d8b0;min-width:120px;}
+.mod-btn{font-family:'Press Start 2P',monospace;font-size:7px;padding:7px 10px;border:2px solid;border-radius:5px;cursor:pointer;transition:all .15s;background:rgba(0,0,0,.3);color:#ccc;border-color:rgba(255,255,255,.2);}
+.mod-btn:hover{filter:brightness(1.3);}
+.mod-btn.sel-speed{background:#2a6a10;color:#c0ffb0;border-color:#60c030;}
+.mod-btn.sel-quality{background:#40408a;color:#c0c0ff;border-color:#8080d0;}
+.mod-btn.sel-tiller{background:#7a3000;color:#ffc898;border-color:#c06020;}
+.mod-btn.sel-off{background:#333;color:#aaa;border-color:#555;}
+.mod-divider{width:100%;height:1px;background:rgba(255,255,255,.1);margin:3px 0;}
+.mod-hint{font-size:13px;color:#88a870;margin-left:4px;}
+.active-summary{font-size:15px;color:#ffe97a;margin-top:8px;min-height:20px;line-height:1.5;}
+
+/* ── CROP TABS ── */
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;justify-content:center;}
+.tab-btn{font-family:'Press Start 2P',monospace;font-size:9px;padding:10px 14px;border:3px solid rgba(255,255,255,.3);border-bottom:none;cursor:pointer;border-radius:6px 6px 0 0;transition:all .15s;position:relative;bottom:-3px;}
+.tab-btn.spring{background:var(--spring-header);color:#fff;}
+.tab-btn.summer{background:var(--summer-header);color:#fff;}
+.tab-btn.fall{background:var(--fall-header);color:#fff;}
+.tab-btn.winter{background:var(--winter-header);color:#fff;}
+.tab-btn.multi{background:var(--multi-header);color:#fff;}
+.tab-btn:not(.active){filter:brightness(.65);transform:scale(.96);}
+.tab-btn.active{filter:brightness(1);transform:scale(1);z-index:2;}
+.tab-btn:hover:not(.active){filter:brightness(.82);}
+
+.season-panel{display:none;}
+.season-panel.active{display:block;}
+.season-header{font-family:'Press Start 2P',monospace;font-size:clamp(10px,1.8vw,15px);padding:13px 18px;border-radius:10px 10px 0 0;display:flex;align-items:center;gap:12px;text-shadow:2px 2px 0 rgba(0,0,0,.35);}
+.season-header .icon{font-size:24px;}
+.spring .season-header{background:var(--spring-header);color:#fff;border:3px solid var(--spring-border);border-bottom:none;}
+.summer .season-header{background:var(--summer-header);color:#fff;border:3px solid var(--summer-border);border-bottom:none;}
+.fall   .season-header{background:var(--fall-header);  color:#fff;border:3px solid var(--fall-border);  border-bottom:none;}
+.winter .season-header{background:var(--winter-header);color:#fff;border:3px solid var(--winter-border);border-bottom:none;}
+.multi  .season-header{background:var(--multi-header); color:#fff;border:3px solid var(--multi-border); border-bottom:none;}
+.table-wrap{overflow-x:auto;border:3px solid;border-top:none;box-shadow:6px 6px 0 rgba(0,0,0,.4);}
+.spring .table-wrap{border-color:var(--spring-border);background:var(--spring-bg);}
+.summer .table-wrap{border-color:var(--summer-border);background:var(--summer-bg);}
+.fall   .table-wrap{border-color:var(--fall-border);  background:var(--fall-bg);}
+.winter .table-wrap{border-color:var(--winter-border);background:var(--winter-bg);}
+.multi  .table-wrap{border-color:var(--multi-border); background:var(--multi-bg);}
+table{width:100%;border-collapse:collapse;font-size:17px;}
+thead th{font-family:'Press Start 2P',monospace;font-size:7.5px;padding:11px 9px;text-align:center;white-space:nowrap;position:sticky;top:0;}
+.spring thead th{background:var(--spring-header);color:#fff;border-bottom:2px solid var(--spring-border);}
+.summer thead th{background:var(--summer-header);color:#fff;border-bottom:2px solid var(--summer-border);}
+.fall   thead th{background:var(--fall-header);  color:#fff;border-bottom:2px solid var(--fall-border);}
+.winter thead th{background:var(--winter-header);color:#fff;border-bottom:2px solid var(--winter-border);}
+.multi  thead th{background:var(--multi-header); color:#fff;border-bottom:2px solid var(--multi-border);}
+.spring tbody tr:nth-child(odd){background:var(--spring-row);}  .spring tbody tr:nth-child(even){background:var(--spring-alt);}
+.summer tbody tr:nth-child(odd){background:var(--summer-row);}  .summer tbody tr:nth-child(even){background:var(--summer-alt);}
+.fall   tbody tr:nth-child(odd){background:var(--fall-row);}    .fall   tbody tr:nth-child(even){background:var(--fall-alt);}
+.winter tbody tr:nth-child(odd){background:var(--winter-row);}  .winter tbody tr:nth-child(even){background:var(--winter-alt);}
+.multi  tbody tr:nth-child(odd){background:var(--multi-row);}   .multi  tbody tr:nth-child(even){background:var(--multi-alt);}
+tbody tr:hover{filter:brightness(.93);}
+.spring td{color:var(--spring-text);} .summer td{color:var(--summer-text);} .fall td{color:var(--fall-text);} .winter td{color:var(--winter-text);} .multi td{color:var(--multi-text);}
+td{padding:8px 9px;text-align:center;vertical-align:middle;border-bottom:1px solid rgba(0,0,0,.08);}
+td.name{text-align:left;font-size:19px;font-weight:bold;white-space:nowrap;padding-left:13px;}
+td.days-cell{font-weight:bold;}
+td.days-cell.boosted{color:#1a6a00 !important;}
+td.days-cell.boosted::after{content:' ▼';font-size:10px;opacity:.7;}
+.badge{display:inline-block;font-family:'Press Start 2P',monospace;font-size:6.5px;padding:2px 4px;border-radius:3px;margin-top:2px;white-space:nowrap;}
+.badge-regrow{background:#d0f0c0;color:#2a6010;border:1px solid #5a9c30;}
+.badge-trellis{background:#ffe0c0;color:#8b3000;border:1px solid #d05010;}
+.badge-multi{background:#e8d0ff;color:#5010a0;border:1px solid #a050e0;}
+.badge-new{background:#fff0c0;color:#8b6000;border:1px solid #d4a010;}
+.badge-year2{background:#ffd0e0;color:#8b0030;border:1px solid #e04060;}
+.badge-special{background:#c0e8ff;color:#003070;border:1px solid #2060c0;}
+.gpd-low{color:#777;} .gpd-ok{color:#2a6a00;font-weight:bold;} .gpd-good{color:#7a5000;font-weight:bold;} .gpd-high{color:#b02400;font-weight:bold;} .gpd-star{color:#8800bb;font-weight:bold;font-size:19px;}
+.note-block{font-size:14px;padding:9px 13px;border-radius:0 0 10px 10px;border:3px solid;border-top:none;margin-bottom:28px;}
+.spring .note-block{background:var(--spring-alt);color:var(--spring-text);border-color:var(--spring-border);}
+.summer .note-block{background:var(--summer-alt);color:var(--summer-text);border-color:var(--summer-border);}
+.fall   .note-block{background:var(--fall-alt);  color:var(--fall-text);  border-color:var(--fall-border);}
+.winter .note-block{background:var(--winter-alt);color:var(--winter-text);border-color:var(--winter-border);}
+.multi  .note-block{background:var(--multi-alt); color:var(--multi-text); border-color:var(--multi-border);}
+.legend{background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.2);border-radius:8px;padding:14px 18px;margin-bottom:20px;font-size:14px;}
+.legend h3{font-family:'Press Start 2P',monospace;font-size:8px;color:#ffe97a;margin-bottom:9px;}
+.legend-items{display:flex;flex-wrap:wrap;gap:9px;align-items:center;}
+thead th.sortable{cursor:pointer;user-select:none;}
+thead th.sortable:hover{filter:brightness(1.2);}
+thead th.sortable::after{content:' ⇅';opacity:.5;font-size:7px;}
+thead th.sort-asc::after{content:' ↑';opacity:1;}
+thead th.sort-desc::after{content:' ↓';opacity:1;}
+
+/* seed cell tooltip trigger */
+td.has-tip{cursor:help;position:relative;}
+td.has-tip::after{content:'ℹ️';font-size:11px;margin-left:4px;opacity:.7;vertical-align:middle;}
+
+/* ════════════════════════════════
+   FISHING SECTION
+════════════════════════════════ */
+.fish-controls{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;align-items:center;}
+.fish-filter-label{font-family:'Press Start 2P',monospace;font-size:8px;color:#90d0ff;margin-right:4px;}
+.fish-filter-btn{font-family:'Press Start 2P',monospace;font-size:7px;padding:7px 11px;border:2px solid;border-radius:5px;cursor:pointer;transition:all .15s;background:rgba(0,0,0,.4);color:#aac8e0;border-color:rgba(100,170,220,.3);}
+.fish-filter-btn:hover{filter:brightness(1.3);}
+.fish-filter-btn.active{background:#0a3060;color:#a0d8ff;border-color:#3090e0;}
+.fish-filter-btn.f-spring.active{background:#1a5a10;color:#c0ffb0;border-color:#50b030;}
+.fish-filter-btn.f-summer.active{background:#7a5000;color:#ffe098;border-color:#e0a020;}
+.fish-filter-btn.f-fall.active{background:#7a2000;color:#ffb878;border-color:#e06020;}
+.fish-filter-btn.f-winter.active{background:#103070;color:#a0c8ff;border-color:#4080d0;}
+.fish-filter-btn.f-legendary.active{background:#5a0080;color:#e0a0ff;border-color:#a040e0;}
+
+.fish-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:10px;margin-bottom:24px;}
+.fish-card{
+  background:rgba(10,30,70,.7);
+  border:2px solid rgba(60,120,200,.4);
+  border-radius:8px;
+  padding:10px 6px 8px;
+  text-align:center;
+  cursor:pointer;
+  transition:all .18s;
+  position:relative;
+  user-select:none;
+}
+.fish-card:hover{
+  border-color:#60b0ff;
+  background:rgba(20,60,130,.85);
+  transform:translateY(-3px);
+  box-shadow:0 6px 18px rgba(30,100,255,.3);
+}
+.fish-card.legendary-card{
+  border-color:rgba(180,80,255,.5);
+  background:rgba(40,10,80,.7);
+}
+.fish-card.legendary-card:hover{
+  border-color:#c060ff;
+  background:rgba(70,20,130,.9);
+  box-shadow:0 6px 20px rgba(150,50,255,.35);
+}
+.fish-card.hidden{display:none;}
+.fish-emoji{font-size:32px;display:block;margin-bottom:4px;line-height:1.1;}
+.fish-name{font-family:'Press Start 2P',monospace;font-size:5.5px;color:#c0d8f0;line-height:1.4;display:block;}
+.fish-price{font-size:13px;color:#ffe97a;display:block;margin-top:3px;}
+.fish-card.legendary-card .fish-name{color:#d0a0ff;}
+.fish-card.legendary-card .fish-price{color:#ffcc44;}
+.crown{position:absolute;top:4px;right:5px;font-size:11px;}
+
+/* ── TOOLTIP ── */
+.fish-tooltip{
+  position:fixed;
+  z-index:9999;
+  background:linear-gradient(145deg,#071a3a,#0d2a58);
+  border:2px solid #3090e0;
+  border-radius:10px;
+  padding:14px 16px;
+  min-width:220px;
+  max-width:290px;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .12s;
+  box-shadow:0 8px 32px rgba(0,30,100,.6);
+}
+.fish-tooltip.visible{opacity:1;}
+.fish-tooltip.legendary-tip{border-color:#a040e0;background:linear-gradient(145deg,#150830,#2a0a50);}
+.tt-name{font-family:'Press Start 2P',monospace;font-size:9px;color:#ffe97a;margin-bottom:10px;line-height:1.4;}
+.tt-name.legendary-name{color:#d090ff;}
+.tt-row{display:flex;gap:8px;margin-bottom:5px;font-size:15px;align-items:flex-start;}
+.tt-icon{font-size:16px;min-width:20px;}
+.tt-label{color:#80a8d0;min-width:60px;font-size:14px;}
+.tt-val{color:#e0f0ff;flex:1;}
+.tt-season span{display:inline-block;padding:1px 5px;border-radius:3px;margin:1px 2px;font-size:13px;}
+.tt-season .sp{background:#2a5a10;color:#b0ffb0;}
+.tt-season .su{background:#7a5000;color:#ffe090;}
+.tt-season .fa{background:#7a2000;color:#ffb070;}
+.tt-season .wi{background:#103070;color:#a0c8ff;}
+.tt-season .any{background:#303030;color:#c0c0c0;}
+.tt-divider{border:none;border-top:1px solid rgba(60,120,200,.3);margin:8px 0;}
+.tt-diff{display:flex;gap:3px;margin-top:2px;}
+.diff-pip{width:10px;height:10px;border-radius:2px;border:1px solid rgba(255,255,255,.2);}
+.diff-filled{background:#e04020;}
+.diff-empty{background:rgba(255,255,255,.1);}
+.legendary-badge{font-family:'Press Start 2P',monospace;font-size:6px;background:#5a0088;color:#e0a0ff;border:1px solid #a040d0;padding:3px 6px;border-radius:3px;display:inline-block;margin-top:4px;}
+.crabpot-badge{font-family:'Press Start 2P',monospace;font-size:6px;background:#2a4a00;color:#a0d060;border:1px solid #508020;padding:3px 6px;border-radius:3px;display:inline-block;margin-top:4px;}
+
+.fish-section-header{font-family:'Press Start 2P',monospace;font-size:10px;color:#60b0ff;margin:22px 0 12px;padding-bottom:6px;border-bottom:2px solid rgba(60,120,200,.3);letter-spacing:1px;}
+
+.no-results{text-align:center;font-size:18px;color:#556;padding:40px;display:none;}
+.footer{text-align:center;font-size:13px;color:rgba(255,255,255,.4);margin-top:14px;padding-bottom:14px;}
+/* ════════════════════════════════
+   BUNDLES SECTION
+════════════════════════════════ */
+.room-header{font-family:'Press Start 2P',monospace;font-size:11px;padding:13px 18px;border-radius:10px 10px 0 0;display:flex;align-items:center;gap:12px;margin-top:24px;}
+.room-header:first-child{margin-top:0;}
+.room-reward{font-size:13px;opacity:.85;font-family:'VT323',monospace;margin-left:auto;}
+.room-pantry   .room-header{background:#5a9c3a;border:3px solid #7ec850;border-bottom:none;color:#fff;}
+.room-fish     .room-header{background:#1060c0;border:3px solid #3090e0;border-bottom:none;color:#fff;}
+.room-crafts   .room-header{background:#7030a0;border:3px solid #b070d8;border-bottom:none;color:#fff;}
+.room-boiler   .room-header{background:#803010;border:3px solid #c06030;border-bottom:none;color:#fff;}
+.room-bulletin .room-header{background:#c05010;border:3px solid #e07030;border-bottom:none;color:#fff;}
+.room-vault    .room-header{background:#806010;border:3px solid #c09020;border-bottom:none;color:#fff;}
+.room-missing  .room-header{background:#300050;border:3px solid #7020a0;border-bottom:none;color:#fff;}
+
+.bundle-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;border:3px solid;border-top:none;padding:14px;border-radius:0 0 10px 10px;margin-bottom:6px;}
+.room-pantry   .bundle-grid{border-color:#7ec850;background:#eaf7df;}
+.room-fish     .bundle-grid{border-color:#3090e0;background:#d0e8ff;}
+.room-crafts   .bundle-grid{border-color:#b070d8;background:#f0d8ff;}
+.room-boiler   .bundle-grid{border-color:#c06030;background:#ffe0d0;}
+.room-bulletin .bundle-grid{border-color:#e07030;background:#ffe8d0;}
+.room-vault    .bundle-grid{border-color:#c09020;background:#fff8d0;}
+.room-missing  .bundle-grid{border-color:#7020a0;background:#e8d0ff;}
+
+.bundle-card{background:rgba(255,255,255,.65);border:2px solid rgba(0,0,0,.12);border-radius:8px;padding:11px 13px;}
+.bundle-name{font-family:'Press Start 2P',monospace;font-size:7.5px;color:#222;margin-bottom:9px;display:flex;justify-content:space-between;align-items:center;}
+.bundle-need{font-size:12px;color:#555;margin-bottom:7px;}
+.bundle-reward-tag{font-size:11px;background:rgba(0,0,0,.08);border-radius:3px;padding:2px 5px;font-family:'Press Start 2P',monospace;color:#444;}
+.bundle-item{display:flex;align-items:center;gap:7px;padding:4px 2px;border-bottom:1px solid rgba(0,0,0,.06);font-size:15px;}
+.bundle-item:last-child{border-bottom:none;}
+.b-check{width:18px;height:18px;border-radius:3px;border:2px solid #aaa;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;background:#fff;}
+.b-check.checked{background:#4a9a20;border-color:#3a7a10;color:#fff;}
+.b-check.checked::after{content:'✓';font-size:12px;font-weight:bold;}
+.b-info{flex:1;}
+.b-name{font-weight:bold;color:#222;}
+.b-detail{font-size:13px;color:#666;}
+.b-season{display:inline-block;padding:1px 5px;border-radius:3px;font-size:12px;margin-right:2px;}
+.b-sp{background:#c8f0b0;color:#2a5a10;} .b-su{background:#ffe898;color:#6b3d00;} .b-fa{background:#ffd0b0;color:#5a1e00;} .b-wi{background:#c8e4f8;color:#0a2050;} .b-any{background:#e0e0e0;color:#444;}
+.b-pick{font-size:11px;color:#886600;font-style:italic;}
+.bundle-progress{height:5px;background:rgba(0,0,0,.1);border-radius:3px;margin-top:8px;overflow:hidden;}
+.bundle-progress-bar{height:100%;background:#4a9a20;border-radius:3px;transition:width .3s;}
+.bundles-reset{font-family:'Press Start 2P',monospace;font-size:7px;padding:8px 14px;border:2px solid rgba(255,255,255,.3);border-radius:5px;cursor:pointer;background:rgba(180,0,0,.4);color:#ffb0b0;margin-bottom:18px;transition:all .15s;}
+.bundles-reset:hover{background:rgba(220,0,0,.6);}
+.bundles-intro{background:rgba(100,60,0,.35);border:2px solid rgba(200,140,20,.3);border-radius:10px;padding:14px 18px;margin-bottom:18px;font-size:15px;color:#f0d890;}
+
+/* ════════════════════════════════
+   GIFTS SECTION
+════════════════════════════════ */
+.gift-search{font-family:'VT323',monospace;font-size:20px;padding:10px 14px;border:2px solid rgba(200,100,180,.4);border-radius:8px;background:rgba(60,10,50,.6);color:#ffb0e0;width:100%;max-width:340px;margin-bottom:16px;outline:none;}
+.gift-search::placeholder{color:rgba(255,160,220,.4);}
+.villager-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;}
+.villager-card{background:rgba(40,0,30,.5);border:2px solid rgba(180,60,140,.3);border-radius:10px;padding:13px;transition:border-color .15s;}
+.villager-card:hover{border-color:rgba(220,100,180,.6);}
+.villager-card.marriageable{border-color:rgba(255,80,120,.35);}
+.villager-card.marriageable:hover{border-color:rgba(255,120,150,.7);}
+.v-header{display:flex;align-items:center;gap:9px;margin-bottom:10px;}
+.v-emoji{font-size:28px;}
+.v-name{font-family:'Press Start 2P',monospace;font-size:8px;color:#ffb0e0;line-height:1.4;}
+.v-bday{font-size:13px;color:#d090c0;}
+.v-heart{font-size:11px;color:#ff6090;}
+.v-loves{margin-bottom:6px;}
+.v-loves-label{font-family:'Press Start 2P',monospace;font-size:6px;color:#ff80c0;margin-bottom:5px;}
+.v-gift-tag{display:inline-block;background:rgba(200,50,150,.2);border:1px solid rgba(200,80,160,.4);border-radius:3px;padding:2px 6px;font-size:13px;color:#f0b0d8;margin:2px;}
+.v-gift-tag.universal{background:rgba(255,200,50,.15);border-color:rgba(255,200,50,.4);color:#ffe090;}
+.v-divider{border:none;border-top:1px solid rgba(180,60,140,.2);margin:7px 0;}
+.gift-universal-banner{background:rgba(80,60,0,.5);border:2px solid rgba(200,160,20,.4);border-radius:10px;padding:14px 18px;margin-bottom:18px;font-size:15px;}
+.gift-universal-banner h3{font-family:'Press Start 2P',monospace;font-size:8px;color:#ffe97a;margin-bottom:10px;}
+.gift-tag-row{display:flex;flex-wrap:wrap;gap:6px;}
+.univ-tag{display:inline-block;background:rgba(200,160,20,.25);border:1px solid rgba(200,160,20,.5);border-radius:4px;padding:3px 8px;font-size:14px;color:#ffe090;}
+.gift-section-note{font-size:14px;color:rgba(255,180,220,.6);margin-bottom:16px;}
+@media(max-width:600px){
+  .bundle-grid{grid-template-columns:1fr;}
+  .villager-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));}
+}
+.fish-tooltip ul{margin:6px 0 0 16px;padding:0;}
+.fish-tooltip li{margin-bottom:3px;}
+.fish-tooltip b{color:#ffe97a;}
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+<div class="title-block">
+  <div class="stars">✦ ✦ ✦ ✦ ✦</div>
+  <h1 class="title-main">VALLEY ALMANAC</h1>
+  <div class="title-main" style="font-size:clamp(9px,1.7vw,14px);color:#a8e090;text-shadow:2px 2px 0 #1a5010;">Fishing &amp; Farming</div>
+  <div class="title-sub">~ A Stardew Fan Guide ~</div>
+  <div class="stars">✦ ✦ ✦ ✦ ✦</div>
+  <div style="font-size:12px;color:rgba(255,255,255,.35);margin-top:10px;letter-spacing:.5px;">Stardew Valley is created by ConcernedApe. This is an unofficial fan resource and is not affiliated with or endorsed by ConcernedApe.</div>
+</div>
+
+<!-- TOP NAV -->
+<div class="top-nav">
+  <button class="nav-btn farming active" onclick="showSection('farming',this)">🌱 FARMING</button>
+  <button class="nav-btn fishing" onclick="showSection('fishing',this)">🎣 FISHING</button>
+  <button class="nav-btn bundles" onclick="showSection('bundles',this)">🏛️ BUNDLES</button>
+  <button class="nav-btn gifts" onclick="showSection('gifts',this)">🎁 GIFTS</button>
+</div>
+
+<!-- ══════════════════════════════════════════
+     FARMING SECTION
+══════════════════════════════════════════ -->
+<div class="section active" id="section-farming">
+
+  <div class="modifier-panel">
+    <h3>⚗️ FERTILIZER &amp; MODIFIERS</h3>
+    <div class="mod-row">
+      <span class="mod-label">🌱 Speed-Gro:</span>
+      <button class="mod-btn" id="sp-none" onclick="setSpeed('none')">None</button>
+      <button class="mod-btn" id="sp-sg"   onclick="setSpeed('sg')">Speed-Gro (−10%)</button>
+      <button class="mod-btn" id="sp-dsg"  onclick="setSpeed('dsg')">Deluxe Speed-Gro (−25%)</button>
+      <button class="mod-btn" id="sp-hsg"  onclick="setSpeed('hsg')">Hyper Speed-Gro (−33%)</button>
+      <span class="mod-hint">Initial grow only, not regrow</span>
+    </div>
+    <div class="mod-row">
+      <span class="mod-label">🤠 Agriculturist:</span>
+      <button class="mod-btn" id="ag-off" onclick="setAgri(false)">Off</button>
+      <button class="mod-btn" id="ag-on"  onclick="setAgri(true)">On (extra −10%)</button>
+      <span class="mod-hint">Stacks with Speed-Gro</span>
+    </div>
+    <div class="mod-divider"></div>
+    <div class="mod-row">
+      <span class="mod-label">✨ Quality Fert:</span>
+      <button class="mod-btn" id="qf-none"  onclick="setQuality('none')">None</button>
+      <button class="mod-btn" id="qf-basic" onclick="setQuality('basic')">Basic (+~10% avg)</button>
+      <button class="mod-btn" id="qf-qual"  onclick="setQuality('qual')">Quality (+~22% avg)</button>
+      <button class="mod-btn" id="qf-delux" onclick="setQuality('delux')">Deluxe (+~35%, Iridium ✦)</button>
+    </div>
+    <div class="mod-row">
+      <span class="mod-label">🎯 Tiller Prof:</span>
+      <button class="mod-btn" id="tl-off" onclick="setTiller(false)">Off</button>
+      <button class="mod-btn" id="tl-on"  onclick="setTiller(true)">On (+10% sell)</button>
+    </div>
+    <div class="active-summary" id="active-summary"></div>
+  </div>
+
+  <div class="legend">
+    <h3>📖 LEGEND</h3>
+    <div class="legend-items">
+      <span class="badge badge-regrow">♻ REGROWS</span>
+      <span class="badge badge-trellis">🪜 TRELLIS</span>
+      <span class="badge badge-multi">🌍 MULTI-SEASON</span>
+      <span class="badge badge-new">✨ NEW 1.6</span>
+      <span class="badge badge-year2">📅 YEAR 2+</span>
+      <span style="color:#aaa;font-size:13px;">&nbsp;|&nbsp;G/Day:&nbsp;</span>
+      <span style="color:#777;font-size:15px;">○ &lt;5</span>
+      <span style="color:#2a6a00;font-size:15px;font-weight:bold;">◑ 5–14</span>
+      <span style="color:#7a5000;font-size:15px;font-weight:bold;">● 15–29</span>
+      <span style="color:#b02400;font-size:15px;font-weight:bold;">★ 30+</span>
+      <span style="color:#8800bb;font-size:16px;font-weight:bold;">★★ 60+</span>
+      <span style="color:#888;font-size:13px;">&nbsp;| ▼ = days reduced by speed mod</span>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn spring active" onclick="showTab('spring',this)">🌸 SPRING</button>
+    <button class="tab-btn summer" onclick="showTab('summer',this)">☀️ SUMMER</button>
+    <button class="tab-btn fall"   onclick="showTab('fall',this)">🍂 FALL</button>
+    <button class="tab-btn winter" onclick="showTab('winter',this)">❄️ WINTER</button>
+    <button class="tab-btn multi"  onclick="showTab('multi',this)">🌍 MULTI</button>
+  </div>
+
+  <div id="tab-spring" class="season-panel spring active">
+    <div class="season-header"><span class="icon">🌸</span> SPRING CROPS</div>
+    <div class="table-wrap"><table id="tbl-spring">
+      <thead><tr><th>CROP</th><th class="sortable" data-col="seed">SEED 💰</th><th class="sortable" data-col="grow">GROW DAYS</th><th>REGROW</th><th class="sortable" data-col="sell">SELL PRICE</th><th class="sortable" data-col="gpd">G/DAY ★</th><th>NOTES</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+    <div class="note-block">💡 <strong>Best picks:</strong> Strawberry (if planted Day 1, regrows every 4d — festival seeds only!) &amp; Coffee Bean (regrows every 2d). Potato is great for new players with ~25% chance at bonus harvest. Carrot is the fastest crop in the game.</div>
+  </div>
+  <div id="tab-summer" class="season-panel summer">
+    <div class="season-header"><span class="icon">☀️</span> SUMMER CROPS</div>
+    <div class="table-wrap"><table id="tbl-summer">
+      <thead><tr><th>CROP</th><th class="sortable" data-col="seed">SEED 💰</th><th class="sortable" data-col="grow">GROW DAYS</th><th>REGROW</th><th class="sortable" data-col="sell">SELL PRICE</th><th class="sortable" data-col="gpd">G/DAY ★</th><th>NOTES</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+    <div class="note-block">💡 <strong>Best picks:</strong> Blueberry (3 per harvest, regrows every 4d) &amp; Starfruit (750g base). Hops + Keg = Pale Ale for huge artisan profits. Red Cabbage is Year 2's crown jewel.</div>
+  </div>
+  <div id="tab-fall" class="season-panel fall">
+    <div class="season-header"><span class="icon">🍂</span> FALL CROPS</div>
+    <div class="table-wrap"><table id="tbl-fall">
+      <thead><tr><th>CROP</th><th class="sortable" data-col="seed">SEED 💰</th><th class="sortable" data-col="grow">GROW DAYS</th><th>REGROW</th><th class="sortable" data-col="sell">SELL PRICE</th><th class="sortable" data-col="gpd">G/DAY ★</th><th>NOTES</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+    <div class="note-block">💡 <strong>Best picks:</strong> Sweet Gem Berry (2,000g profit from 1,000g seed!), Cranberry (regrows, 2 per harvest), Pumpkin &amp; Artichoke for solid mid-range returns. Peak farming season!</div>
+  </div>
+  <div id="tab-winter" class="season-panel winter">
+    <div class="season-header"><span class="icon">❄️</span> WINTER CROPS</div>
+    <div class="table-wrap"><table id="tbl-winter">
+      <thead><tr><th>CROP</th><th class="sortable" data-col="seed">SEED 💰</th><th class="sortable" data-col="grow">GROW DAYS</th><th>REGROW</th><th class="sortable" data-col="sell">SELL PRICE</th><th class="sortable" data-col="gpd">G/DAY ★</th><th>NOTES</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+    <div class="note-block">❄️ <strong>Winter is mostly a rest season.</strong> Use the Greenhouse for year-round Starfruit or Ancient Fruit. Powdermelon is a fun new v1.6 crop. Focus on mining, relationships &amp; skills!</div>
+  </div>
+  <div id="tab-multi" class="season-panel multi">
+    <div class="season-header"><span class="icon">🌍</span> MULTI-SEASON &amp; SPECIAL CROPS</div>
+    <div class="table-wrap"><table id="tbl-multi">
+      <thead><tr><th>CROP</th><th>SEASONS</th><th class="sortable" data-col="seed">SEED 💰</th><th class="sortable" data-col="grow">GROW DAYS</th><th>REGROW</th><th class="sortable" data-col="sell">SELL PRICE</th><th class="sortable" data-col="gpd">G/DAY ★</th><th>NOTES</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+    <div class="note-block">🌟 <strong>Ancient Fruit in the Greenhouse</strong> is end-game nirvana — plant once, harvest every 7 days forever! Coffee Bean is Spring/Summer MVP. Ginger Island unlocks whole new possibilities!</div>
+  </div>
+
+</div><!-- /section-farming -->
+
+<!-- ══════════════════════════════════════════
+     FISHING SECTION
+══════════════════════════════════════════ -->
+<div class="section" id="section-fishing">
+
+  <div style="background:rgba(0,20,60,.5);border:2px solid rgba(60,120,200,.3);border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:15px;color:#90b8d8;">
+    🎣 Hover over any fish to see its catch info. Filter by season or type using the buttons below.
+    All data from the Stardew Valley Wiki (v1.6). Magic Bait lets you catch any fish regardless of season, time, or weather!
+  </div>
+
+  <!-- Filters -->
+  <div class="fish-controls">
+    <span class="fish-filter-label">FILTER:</span>
+    <button class="fish-filter-btn active" data-filter="all" onclick="filterFish('all',this)">All Fish</button>
+    <button class="fish-filter-btn f-spring" data-filter="spring" onclick="filterFish('spring',this)">🌸 Spring</button>
+    <button class="fish-filter-btn f-summer" data-filter="summer" onclick="filterFish('summer',this)">☀️ Summer</button>
+    <button class="fish-filter-btn f-fall"   data-filter="fall"   onclick="filterFish('fall',this)">🍂 Fall</button>
+    <button class="fish-filter-btn f-winter" data-filter="winter" onclick="filterFish('winter',this)">❄️ Winter</button>
+    <button class="fish-filter-btn" data-filter="any" onclick="filterFish('any',this)">🌍 Any Season</button>
+    <button class="fish-filter-btn f-legendary" data-filter="legendary" onclick="filterFish('legendary',this)">👑 Legendary</button>
+    <button class="fish-filter-btn" data-filter="crabpot" onclick="filterFish('crabpot',this)">🦞 Crab Pot</button>
+  </div>
+
+  <div id="fish-grid" class="fish-grid"></div>
+  <div class="no-results" id="no-results">No fish match this filter!</div>
+
+</div><!-- /section-fishing -->
+
+<!-- TOOLTIP -->
+<div class="fish-tooltip" id="fish-tooltip"></div>
+
+<div class="footer">
+  ✦ Data from the Stardew Valley Wiki ✦ Verified for v1.6 ✦ Last updated March 2026 ✦<br>
+  ✦ Crop G/Day: Day 1 planting, 28-day season, base quality unless modifiers active ✦ Speed mods only affect initial grow time, not regrow ✦<br>
+  <span style="margin-top:8px;display:inline-block;">
+    💌 <a href="mailto:feedback@valleyalmanac.com" style="color:rgba(255,255,255,.45);text-decoration:underline;text-underline-offset:3px;">Spotted an error or have a suggestion?</a>
+    &nbsp;·&nbsp; Created with ♥ for Pelican Town
+  </span><br><br>
+  <span style="color:rgba(255,255,255,.22);">Stardew Valley is created by ConcernedApe. Valley Almanac is an unofficial fan resource and is not affiliated with or endorsed by ConcernedApe.</span>
+</div>
+</div><!-- /page-wrap -->
+
+<!-- ══════════════════════════════════════════
+     BUNDLES SECTION
+══════════════════════════════════════════ -->
+<div class="section" id="section-bundles">
+  <div class="bundles-intro">
+    🏛️ Track your Community Center progress! Check off items as you collect them — your progress saves automatically in your browser.
+    <strong style="color:#ffe090;">Note:</strong> Some bundles are pick-some (e.g. "5 of 12") — you only need to check enough items to fill the slots.
+  </div>
+  <button class="bundles-reset" onclick="resetBundles()">⚠️ Reset All Checkboxes</button>
+  <div id="bundles-container"></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     GIFTS SECTION
+══════════════════════════════════════════ -->
+<div class="section" id="section-gifts">
+  <div class="gift-universal-banner">
+    <h3>💛 UNIVERSAL LOVES — Every Villager</h3>
+    <div class="gift-tag-row">
+      <span class="univ-tag">✨ Prismatic Shard</span>
+      <span class="univ-tag">🐇 Rabbit's Foot</span>
+      <span class="univ-tag">🎃 Golden Pumpkin</span>
+      <span class="univ-tag">🦪 Pearl</span>
+      <span class="univ-tag">🍵 Stardrop Tea</span>
+    </div>
+    <div style="margin-top:8px;font-size:13px;color:#c0a060;">⚠️ Exceptions: Rabbit's Foot is disliked by Penny. Stardrop Tea gives 250pts (not 80) and has no weekly limit.</div>
+  </div>
+  <div class="gift-section-note">Search by villager name or gift item. ❤️ = marriageable. Birthday gifts give 8× friendship points!</div>
+  <input class="gift-search" type="text" placeholder="🔍 Search villager or gift..." oninput="filterVillagers(this.value)" id="gift-search">
+  <div class="villager-grid" id="villager-grid"></div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════
+//  BUNDLE DATA
+// ════════════════════════════════════════════════
+const BUNDLES=[
+  {room:'pantry',roomLabel:'🌾 Pantry',roomReward:'Repairs the Greenhouse',bundles:[
+    {id:'spring-crops',name:'Spring Crops',reward:'Speed-Gro ×20',need:'All 4',pickOf:null,items:[
+      {e:'🌿',n:'Parsnip',detail:'Grow in Spring',season:'sp'},
+      {e:'🥬',n:'Green Bean',detail:'Grow in Spring',season:'sp'},
+      {e:'🥦',n:'Cauliflower',detail:'Grow in Spring',season:'sp'},
+      {e:'🥔',n:'Potato',detail:'Grow in Spring',season:'sp'},
+    ]},
+    {id:'summer-crops',name:'Summer Crops',reward:'Quality Sprinkler',need:'All 4',pickOf:null,items:[
+      {e:'🍅',n:'Tomato',detail:'Grow in Summer',season:'su'},
+      {e:'🫐',n:'Blueberry',detail:'Grow in Summer',season:'su'},
+      {e:'🌶️',n:'Hot Pepper',detail:'Grow in Summer',season:'su'},
+      {e:'🍈',n:'Melon',detail:'Grow in Summer',season:'su'},
+    ]},
+    {id:'fall-crops',name:'Fall Crops',reward:'Bee House',need:'All 4',pickOf:null,items:[
+      {e:'🌽',n:'Corn',detail:'Grow in Summer/Fall',season:'fa'},
+      {e:'🍆',n:'Eggplant',detail:'Grow in Fall',season:'fa'},
+      {e:'🎃',n:'Pumpkin',detail:'Grow in Fall',season:'fa'},
+      {e:'🍠',n:'Yam',detail:'Grow in Fall',season:'fa'},
+    ]},
+    {id:'quality-crops',name:'Quality Crops Bundle',reward:'Preserves Jar',need:'3 of 4 (Gold ★ quality)',pickOf:4,slots:3,items:[
+      {e:'🥔',n:'Parsnip (Gold)',detail:'Gold ★ quality',season:'sp'},
+      {e:'🍈',n:'Melon (Gold)',detail:'Gold ★ quality',season:'su'},
+      {e:'🎃',n:'Pumpkin (Gold)',detail:'Gold ★ quality',season:'fa'},
+      {e:'🌽',n:'Corn (Gold)',detail:'Gold ★ quality',season:'any'},
+    ]},
+    {id:'animal',name:'Animal Bundle',reward:'Cheese Press',need:'5 of 6',pickOf:6,slots:5,items:[
+      {e:'🧀',n:'Large Milk',detail:'From high-friendship cow',season:'any'},
+      {e:'🥚',n:'Large Egg',detail:'From high-friendship chicken',season:'any'},
+      {e:'🧀',n:'Large Goat Milk',detail:'From high-friendship goat',season:'any'},
+      {e:'🧶',n:'Wool',detail:'From rabbit or sheep',season:'any'},
+      {e:'🦆',n:'Duck Egg',detail:'From duck (4+ hearts)',season:'any'},
+      {e:'🍄',n:'Truffle',detail:'From pig (outdoor)',season:'any'},
+    ]},
+    {id:'artisan',name:'Artisan Bundle',reward:'Keg',need:'6 of 13',pickOf:13,slots:6,items:[
+      {e:'🍷',n:'Truffle Oil',detail:'Pig truffle → Oil Maker',season:'any'},
+      {e:'🌸',n:'Cloth',detail:'Wool → Loom',season:'any'},
+      {e:'🫙',n:'Goat Cheese',detail:'Goat Milk → Cheese Press',season:'any'},
+      {e:'🧀',n:'Cheese',detail:'Milk → Cheese Press',season:'any'},
+      {e:'🍯',n:'Honey',detail:'From Bee House',season:'any'},
+      {e:'🫙',n:'Jelly',detail:'Any fruit → Preserves Jar',season:'any'},
+      {e:'🍎',n:'Apple',detail:'From Apple Tree (Fall)',season:'fa'},
+      {e:'🍊',n:'Apricot',detail:'From Apricot Tree (Spring)',season:'sp'},
+      {e:'🍒',n:'Cherry',detail:'From Cherry Tree (Spring)',season:'sp'},
+      {e:'🍊',n:'Orange',detail:'From Orange Tree (Summer)',season:'su'},
+      {e:'🍑',n:'Peach',detail:'From Peach Tree (Summer)',season:'su'},
+      {e:'🍎',n:'Pomegranate',detail:'From Pomegranate Tree (Fall)',season:'fa'},
+      {e:'🫙',n:'Pickle',detail:'Any vegetable → Preserves Jar',season:'any'},
+    ]},
+  ]},
+  {room:'fish',roomLabel:'🐟 Fish Tank',roomReward:'Removes Glittering Boulder + Copper Pan',bundles:[
+    {id:'river-fish',name:'River Fish Bundle',reward:'Deluxe Bait ×30',need:'All 4',pickOf:null,items:[
+      {e:'🌞',n:'Sunfish',detail:'River · Sunny · 6am–7pm',season:'sp su'},
+      {e:'🐈',n:'Catfish',detail:'River · Rain · 6am–12am',season:'sp fa'},
+      {e:'🌧️',n:'Shad',detail:'River · Rain · 9am–2am',season:'sp su fa'},
+      {e:'🐟',n:'Tiger Trout',detail:'River · Any · 6am–7pm',season:'fa wi'},
+    ]},
+    {id:'lake-fish',name:'Lake Fish Bundle',reward:'5 Dressed Spinner',need:'All 4',pickOf:null,items:[
+      {e:'🐂',n:'Bullhead',detail:'Mountain Lake · Any time',season:'any'},
+      {e:'🐟',n:'Largemouth Bass',detail:'Mountain Lake · 6am–7pm',season:'any'},
+      {e:'🐟',n:'Carp',detail:'Mountain Lake · Any time',season:'any'},
+      {e:'🐟',n:'Sturgeon',detail:'Mountain Lake · 6am–7pm',season:'su wi'},
+    ]},
+    {id:'ocean-fish',name:'Ocean Fish Bundle',reward:'5 Warp Totem: Beach',need:'All 4',pickOf:null,items:[
+      {e:'🐟',n:'Sardine',detail:'Ocean · Any · 6am–7pm',season:'sp fa wi'},
+      {e:'🐡',n:'Tuna',detail:'Ocean · Any · 6am–7pm',season:'su wi'},
+      {e:'🐟',n:'Red Snapper',detail:'Ocean · Rain · 6am–7pm',season:'su fa'},
+      {e:'🫧',n:'Tilapia',detail:'Ocean · Any · 6am–2pm',season:'su fa'},
+    ]},
+    {id:'night-fish',name:'Night Fishing Bundle',reward:'Glow Ring',need:'All 3',pickOf:null,items:[
+      {e:'🌙',n:'Walleye',detail:'River/Lake · Rain · 12pm–2am',season:'fa'},
+      {e:'🐟',n:'Bream',detail:'River · Any · 6pm–2am',season:'any'},
+      {e:'🌙',n:'Eel',detail:'Ocean · Rain · 4pm–2am',season:'sp fa'},
+    ]},
+    {id:'crabpot',name:'Crab Pot Bundle',reward:'3 Crab Pots',need:'5 of 9 (one of each type)',pickOf:9,slots:5,items:[
+      {e:'🦀',n:'Lobster',detail:'Ocean Crab Pot',season:'any'},
+      {e:'🦐',n:'Crayfish',detail:'Freshwater Crab Pot',season:'any'},
+      {e:'🦀',n:'Crab',detail:'Ocean Crab Pot',season:'any'},
+      {e:'🦪',n:'Cockle',detail:'Ocean Crab Pot or beach forage',season:'any'},
+      {e:'🦪',n:'Mussel',detail:'Ocean Crab Pot or beach forage',season:'any'},
+      {e:'🦐',n:'Shrimp',detail:'Ocean Crab Pot',season:'any'},
+      {e:'🐌',n:'Snail',detail:'Freshwater Crab Pot',season:'any'},
+      {e:'🐚',n:'Periwinkle',detail:'Freshwater Crab Pot',season:'any'},
+      {e:'🦪',n:'Oyster',detail:'Ocean Crab Pot or beach forage',season:'any'},
+    ]},
+    {id:'specialty-fish',name:'Specialty Fish Bundle',reward:'5 Dish o\' the Sea',need:'All 4',pickOf:null,items:[
+      {e:'🐠',n:'Pufferfish',detail:'Ocean · Sunny · 12pm–4pm',season:'su'},
+      {e:'👻',n:'Ghostfish',detail:'Mines floors 20/60 · Any time',season:'any'},
+      {e:'🦎',n:'Sandfish',detail:'Desert · Any · 6am–8pm (need bus!)',season:'any'},
+      {e:'🦂',n:'Scorpion Carp',detail:'Desert · Any · 6am–8pm (need bus!)',season:'any'},
+    ]},
+  ]},
+  {room:'crafts',roomLabel:'🪓 Crafts Room',roomReward:'Repairs bridge to Quarry',bundles:[
+    {id:'spring-forage',name:'Spring Foraging',reward:'Spring Seeds ×30',need:'All 4',pickOf:null,items:[
+      {e:'🌼',n:'Daffodil',detail:'Forage in Spring',season:'sp'},
+      {e:'🌿',n:'Leek',detail:'Forage in Spring',season:'sp'},
+      {e:'🌸',n:'Dandelion',detail:'Forage in Spring',season:'sp'},
+      {e:'🌱',n:'Wild Horseradish',detail:'Forage in Spring',season:'sp'},
+    ]},
+    {id:'summer-forage',name:'Summer Foraging',reward:'Summer Seeds ×30',need:'All 3',pickOf:null,items:[
+      {e:'🍇',n:'Grape',detail:'Forage in Summer (or grow as crop)',season:'su'},
+      {e:'🫐',n:'Spice Berry',detail:'Forage in Summer (common, most locations)',season:'su'},
+      {e:'🌸',n:'Sweet Pea',detail:'Forage in Summer (grassy areas)',season:'su'},
+    ]},
+    {id:'fall-forage',name:'Fall Foraging',reward:'Fall Seeds ×30',need:'All 4',pickOf:null,items:[
+      {e:'🍂',n:'Common Mushroom',detail:'Forage in Fall',season:'fa'},
+      {e:'🌿',n:'Wild Plum',detail:'Forage in Fall',season:'fa'},
+      {e:'🌰',n:'Hazelnut',detail:'Forage in Fall',season:'fa'},
+      {e:'🍁',n:'Blackberry',detail:'Forage in Fall',season:'fa'},
+    ]},
+    {id:'winter-forage',name:'Winter Foraging',reward:'Winter Seeds ×30',need:'All 4',pickOf:null,items:[
+      {e:'🌿',n:'Winter Root',detail:'Dig artifact spots in Winter',season:'wi'},
+      {e:'🍬',n:'Crystal Fruit',detail:'Forage in Winter',season:'wi'},
+      {e:'🌿',n:'Snow Yam',detail:'Dig artifact spots in Winter',season:'wi'},
+      {e:'🌸',n:'Crocus',detail:'Forage in Winter',season:'wi'},
+    ]},
+    {id:'construction',name:'Construction Bundle',reward:'Charcoal Kiln',need:'All 4',pickOf:null,items:[
+      {e:'🪵',n:'Wood ×99',detail:'Chop trees',season:'any'},
+      {e:'🪨',n:'Stone ×99',detail:'Mine or break rocks',season:'any'},
+      {e:'🪵',n:'Hardwood ×10',detail:'Chop stumps/logs (Copper Axe+)',season:'any'},
+      {e:'🌿',n:'Fiber ×10',detail:'Cut grass',season:'any'},
+    ]},
+    {id:'exotic-forage',name:'Exotic Foraging Bundle',reward:'5 Autumn\'s Bounty',need:'5 of 9',pickOf:9,slots:5,items:[
+      {e:'🥥',n:'Coconut',detail:'Desert forage or Oasis shop',season:'any'},
+      {e:'🌵',n:'Cactus Fruit',detail:'Desert forage',season:'any'},
+      {e:'🥕',n:'Cave Carrot',detail:'Mines floor 1–39',season:'any'},
+      {e:'🍄',n:'Red Mushroom',detail:'Forage/cave Summer or Fall',season:'su fa'},
+      {e:'🍄',n:'Purple Mushroom',detail:'Mines/cave mid-levels',season:'any'},
+      {e:'🍯',n:'Maple Syrup',detail:'Tapper on Maple Tree (7 days)',season:'any'},
+      {e:'🌲',n:'Oak Resin',detail:'Tapper on Oak Tree (7 days)',season:'any'},
+      {e:'🌲',n:'Pine Tar',detail:'Tapper on Pine Tree (5 days)',season:'any'},
+      {e:'🍄',n:'Morel',detail:'Forage Secret Woods in Spring',season:'sp'},
+    ]},
+  ]},
+  {room:'boiler',roomLabel:'⛏️ Boiler Room',roomReward:'Repairs Minecarts',bundles:[
+    {id:'blacksmith',name:'Blacksmith\'s Bundle',reward:'Furnace',need:'All 3',pickOf:null,items:[
+      {e:'🟤',n:'Copper Bar',detail:'Smelt 5 Copper Ore + 1 Coal',season:'any'},
+      {e:'⚙️',n:'Iron Bar',detail:'Smelt 5 Iron Ore + 1 Coal',season:'any'},
+      {e:'🥇',n:'Gold Bar',detail:'Smelt 5 Gold Ore + 1 Coal',season:'any'},
+    ]},
+    {id:'geologist',name:'Geologist\'s Bundle',reward:'5 Omni Geode',need:'All 4',pickOf:null,items:[
+      {e:'💎',n:'Quartz',detail:'Mines any floor',season:'any'},
+      {e:'🌍',n:'Earth Crystal',detail:'Mines floors 1–39',season:'any'},
+      {e:'❄️',n:'Frozen Tear',detail:'Mines floors 40–79',season:'any'},
+      {e:'🔥',n:'Fire Quartz',detail:'Mines floors 80–119',season:'any'},
+    ]},
+    {id:'adventurer',name:'Adventurer\'s Bundle',reward:'Small Magnet Ring',need:'2 of 4',pickOf:4,slots:2,items:[
+      {e:'🦇',n:'Bat Wing ×10',detail:'Drop from Bats (mines 40+)',season:'any'},
+      {e:'🐉',n:'Solar Essence',detail:'Drop from Ghosts/Metal Heads',season:'any'},
+      {e:'🌑',n:'Void Essence',detail:'Drop from Shadow creatures',season:'any'},
+      {e:'🐛',n:'Slime ×99',detail:'Drop from Slimes',season:'any'},
+    ]},
+  ]},
+  {room:'bulletin',roomLabel:'📋 Bulletin Board',roomReward:'+2 hearts with all non-datable villagers',bundles:[
+    {id:'chef',name:"Chef's Bundle",reward:'Pink Cake ×3',need:'All 6',pickOf:null,items:[
+      {e:'🍁',n:'Maple Syrup',detail:'Tapper on Maple Tree (~9 days)',season:'any'},
+      {e:'🌿',n:'Fiddlehead Fern',detail:'Forage in Secret Woods in Summer',season:'su'},
+      {e:'🍄',n:'Truffle',detail:'Pig in Deluxe Barn (outdoor, non-winter)',season:'any'},
+      {e:'🌸',n:'Poppy',detail:'Grow in Summer (7 days)',season:'su'},
+      {e:'🍱',n:'Maki Roll',detail:'Cook: any fish + Seaweed + Rice',season:'any'},
+      {e:'🍳',n:'Fried Egg',detail:'Cook: 1 Egg (requires kitchen upgrade)',season:'any'},
+    ]},
+    {id:'dye',name:'Dye Bundle',reward:'Seed Maker',need:'All 6',pickOf:null,items:[
+      {e:'🌸',n:'Red Mushroom',detail:'Forage Summer/Fall or cave',season:'su fa'},
+      {e:'🌊',n:'Sea Urchin',detail:'Beach forage in Summer',season:'su'},
+      {e:'🌸',n:'Sunflower',detail:'Grow in Summer/Fall',season:'su fa'},
+      {e:'🥕',n:'Duck Feather',detail:'From Duck (4+ hearts)',season:'any'},
+      {e:'💎',n:'Aquamarine',detail:'Mines floors 40–79',season:'any'},
+      {e:'🔴',n:'Red Cabbage',detail:'Grow in Summer (Year 2+ seed)',season:'su'},
+    ]},
+    {id:'field-research',name:'Field Research Bundle',reward:'Recycling Machine',need:'All 4',pickOf:null,items:[
+      {e:'🐡',n:'Purple Mushroom',detail:'Mines/cave mid-levels',season:'any'},
+      {e:'🐠',n:'Nautilus Shell',detail:'Beach forage in Winter',season:'wi'},
+      {e:'🐟',n:'Chub',detail:'Mountain Lake or Forest River',season:'any'},
+      {e:'🧊',n:'Frozen Geode',detail:'Mines floors 40–79',season:'any'},
+    ]},
+    {id:'fodder',name:'Fodder Bundle',reward:'Heater',need:'All 3',pickOf:null,items:[
+      {e:'🌿',n:'Wheat ×10',detail:'Grow in Summer/Fall',season:'su fa'},
+      {e:'🌾',n:'Hay ×10',detail:'Cut grass or buy from Marnie',season:'any'},
+      {e:'🍎',n:'Apple',detail:'From Apple Tree in Fall',season:'fa'},
+    ]},
+    {id:'enchanter',name:"Enchanter's Bundle",reward:'Gold Bar ×5',need:'All 4',pickOf:null,items:[
+      {e:'🍷',n:'Oak Resin',detail:'Tapper on Oak Tree',season:'any'},
+      {e:'🌿',n:'Wine',detail:'Any Fruit → Keg',season:'any'},
+      {e:'🐇',n:'Rabbit\'s Foot',detail:'From Rabbit (4+ hearts)',season:'any'},
+      {e:'🍀',n:'Pomegranate',detail:'From Pomegranate Tree in Fall',season:'fa'},
+    ]},
+  ]},
+  {room:'vault',roomLabel:'💰 Vault',roomReward:'Repairs bus to Calico Desert',bundles:[
+    {id:'vault2500', name:'2,500g Bundle', reward:'Chocolate Cake ×3',       need:'Pay 2,500g',  pickOf:null,items:[{e:'💰',n:'2,500g', detail:'Pay gold directly at the bundle',season:'any'}]},
+    {id:'vault5000', name:'5,000g Bundle', reward:'Quality Fertilizer ×30',  need:'Pay 5,000g',  pickOf:null,items:[{e:'💰',n:'5,000g', detail:'Pay gold directly at the bundle',season:'any'}]},
+    {id:'vault10000',name:'10,000g Bundle',reward:'Lightning Rod',            need:'Pay 10,000g', pickOf:null,items:[{e:'💰',n:'10,000g',detail:'Pay gold directly at the bundle',season:'any'}]},
+    {id:'vault25000',name:'25,000g Bundle',reward:'Crystalarium',             need:'Pay 25,000g', pickOf:null,items:[{e:'💰',n:'25,000g',detail:'Pay gold directly at the bundle',season:'any'}]},
+  ]},
+  {room:'missing',roomLabel:'🎬 Missing Bundle (JojaMart)',roomReward:'Abandoned JojaMart → Movie Theater',bundles:[
+    {id:'missing-bundle',name:'Missing Bundle',reward:'Movie Theater unlocked',need:'All 5',pickOf:null,items:[
+      {e:'🍷',n:'Wine (any)',detail:'Any Fruit → Keg',season:'any'},
+      {e:'🧀',n:'Dinosaur Mayonnaise',detail:'Dinosaur Egg → Mayonnaise Machine',season:'any'},
+      {e:'🎣',n:'Prismatic Shard',detail:'Rare — Skull Cavern or Fishing Chest',season:'any'},
+      {e:'🐠',n:'Void Salmon (Gold ★)',detail:'Witch\'s Swamp · Any time',season:'any'},
+      {e:'🫙',n:'Caviar',detail:'Sturgeon Roe → Preserves Jar',season:'any'},
+    ]},
+  ]},
+];
+
+// ════════════════════════════════════════════════
+//  VILLAGER GIFT DATA
+// ════════════════════════════════════════════════
+const VILLAGERS=[
+  {name:'Abigail',   emoji:'💜',bday:'Fall 13',    marriageable:true, loves:['Amethyst','Banana Pudding','Blackberry Cobbler','Chocolate Cake','Pufferfish','Pumpkin','Spicy Eel']},
+  {name:'Alex',      emoji:'🏈',bday:'Summer 13',  marriageable:true, loves:['Complete Breakfast','Salmon Dinner']},
+  {name:'Caroline',  emoji:'🌿',bday:'Winter 7',   marriageable:false,loves:['Fish Taco','Green Tea','Summer Spangle','Tropical Curry']},
+  {name:'Clint',     emoji:'⚒️', bday:'Winter 26',  marriageable:false,loves:['Amethyst','Aquamarine','Artichoke Dip','Fiddlehead Risotto','Gold Bar','Iridium Bar','Omni Geode','Ruby','Topaz']},
+  {name:'Demetrius', emoji:'🔬',bday:'Summer 19',  marriageable:false,loves:['Bean Hotpot','Ice Cream','Rice Pudding','Strawberry']},
+  {name:'Dwarf',     emoji:'⛏️', bday:'Summer 22',  marriageable:false,loves:['Amethyst','Aquamarine','Emerald','Ruby','Topaz']},
+  {name:'Elliott',   emoji:'📚',bday:'Fall 5',     marriageable:true, loves:['Crab Cakes','Duck Feather','Lobster','Pomegranate','Squid Ink','Tom Kha Soup']},
+  {name:'Emily',     emoji:'🎨',bday:'Spring 27',  marriageable:true, loves:['Amethyst','Aquamarine','Cloth','Emerald','Jade','Ruby','Survival Burger','Topaz','Wool']},
+  {name:'Evelyn',    emoji:'🌺',bday:'Winter 20',  marriageable:false,loves:['Beet','Chocolate Cake','Diamond','Fairy Rose','Stuffing','Tulip']},
+  {name:'George',    emoji:'🪑',bday:'Fall 24',    marriageable:false,loves:['Fried Mushroom','Leek']},
+  {name:'Gus',       emoji:'🍺',bday:'Summer 8',   marriageable:false,loves:['Diamond','Escargot','Fish Taco','Orange','Tropical Curry']},
+  {name:'Haley',     emoji:'📷',bday:'Spring 14',  marriageable:true, loves:['Coconut','Fruit Salad','Pink Cake','Sunflower']},
+  {name:'Harvey',    emoji:'🩺',bday:'Winter 14',  marriageable:true, loves:['Coffee','Pickles','Super Meal','Truffle Oil','Wine']},
+  {name:'Jas',       emoji:'🌸',bday:'Summer 4',   marriageable:false,loves:['Ancient Doll','Fairy Box','Fairy Rose','Pink Cake','Plum Pudding','Strange Doll (green)','Strange Doll (yellow)']},
+  {name:'Jodi',      emoji:'🏠',bday:'Fall 11',    marriageable:false,loves:['Chocolate Cake','Crispy Bass','Diamond','Eggplant Parmesan','Fried Eel','Pancakes','Rhubarb Pie','Vegetable Medley']},
+  {name:'Kent',      emoji:'🎖️', bday:'Spring 4',   marriageable:false,loves:['Fiddlehead Risotto','Roasted Hazelnuts']},
+  {name:'Krobus',    emoji:'🌑',bday:'Winter 1',   marriageable:false,loves:['Diamond','Iridium Bar','Pumpkin','Taro Root','Void Egg','Void Mayonnaise','Wild Horseradish']},
+  {name:'Leah',      emoji:'🎨',bday:'Winter 23',  marriageable:true, loves:['Goat Cheese','Poppyseed Muffin','Salad','Stir Fry','Truffle','Vegetable Medley','Wine']},
+  {name:'Leo',       emoji:'🦜',bday:'Summer 26',  marriageable:false,loves:['Dried Sunflowers','Mango','Mango Sticky Rice','Ostrich Egg','Poi']},
+  {name:'Lewis',     emoji:'🎩',bday:'Spring 7',   marriageable:false,loves:['Autumn\'s Bounty','Glazed Yams','Hot Pepper','Vegetable Medley']},
+  {name:'Linus',     emoji:'⛺',bday:'Winter 3',   marriageable:false,loves:['Blueberry Tart','Cactus Fruit','Coconut','Dish o\' the Sea','Yam']},
+  {name:'Marnie',    emoji:'🐄',bday:'Fall 18',    marriageable:false,loves:['Diamond','Farmer\'s Lunch','Pink Cake','Pumpkin Pie']},
+  {name:'Maru',      emoji:'🔭',bday:'Summer 10',  marriageable:true, loves:['Battery Pack','Cauliflower','Cheese Cauliflower','Diamond','Gold Bar','Iridium Bar','Miner\'s Treat','Pepper Poppers','Radioactive Bar','Strawberry']},
+  {name:'Pam',       emoji:'🚌',bday:'Spring 18',  marriageable:false,loves:['Beer','Cactus Fruit','Glazed Yams','Mead','Pale Ale','Parsnip','Parsnip Soup','Piña Colada']},
+  {name:'Penny',     emoji:'📖',bday:'Fall 2',     marriageable:true, loves:['Diamond','Emerald','Melon','Poppy','Poppyseed Muffin','Red Plate','Roots Platter','Sandfish','Tom Kha Soup']},
+  {name:'Pierre',    emoji:'🌱',bday:'Spring 26',  marriageable:false,loves:['Fried Calamari']},
+  {name:'Robin',     emoji:'🪚',bday:'Fall 21',    marriageable:false,loves:['Goat Cheese','Peach','Spaghetti']},
+  {name:'Sam',       emoji:'🎸',bday:'Summer 17',  marriageable:true, loves:['Cactus Fruit','Maple Bar','Pizza','Tigerseye']},
+  {name:'Sandy',     emoji:'🌵',bday:'Fall 15',    marriageable:false,loves:['Crocus','Daffodil','Mango Sticky Rice','Sweet Pea']},
+  {name:'Sebastian', emoji:'💻',bday:'Winter 10',  marriageable:true, loves:['Frozen Tear','Obsidian','Pumpkin Soup','Sashimi','Void Egg']},
+  {name:'Shane',     emoji:'🐔',bday:'Spring 20',  marriageable:true, loves:['Beer','Hot Pepper','Pepper Poppers','Pizza']},
+  {name:'Vincent',   emoji:'🎈',bday:'Spring 10',  marriageable:false,loves:['Cranberry Candy','Ginger Ale','Grape','Pink Cake','Snail']},
+  {name:'Willy',     emoji:'🎣',bday:'Summer 24',  marriageable:false,loves:['Catfish','Diamond','Iridium Bar','Mead','Octopus','Pumpkin','Sea Cucumber','Sturgeon']},
+  {name:'Wizard',    emoji:'🔮',bday:'Winter 17',  marriageable:false,loves:['Purple Mushroom','Solar Essence','Super Cucumber','Void Essence']},
+];
+
+// ─── BUNDLES RENDER ───
+function buildBundles(){
+  const container=document.getElementById('bundles-container');
+  container.innerHTML='';
+  const saved=JSON.parse(localStorage.getItem('va-bundles')||'{}');
+  BUNDLES.forEach(room=>{
+    const roomDiv=document.createElement('div');
+    roomDiv.className=`room-${room.room}`;
+    const hdr=document.createElement('div');
+    hdr.className='room-header';
+    hdr.innerHTML=`<span>${room.roomLabel}</span><span class="room-reward">🎁 ${room.roomReward}</span>`;
+    roomDiv.appendChild(hdr);
+    const grid=document.createElement('div');
+    grid.className='bundle-grid';
+    room.bundles.forEach(bundle=>{
+      const card=document.createElement('div');
+      card.className='bundle-card';
+      const checked=bundle.items.filter((_,i)=>saved[bundle.id+'_'+i]);
+      const total=bundle.items.length;
+      const needed=bundle.slots||total;
+      const pct=Math.min(100,Math.round(checked.length/needed*100));
+      let itemsHTML='';
+      bundle.items.forEach((item,i)=>{
+        const ck=saved[bundle.id+'_'+i]?'checked':'';
+        const seasons=item.season.split(' ').map(s=>{
+          const cls={sp:'b-sp',su:'b-su',fa:'b-fa',wi:'b-wi',any:'b-any'}[s]||'b-any';
+          const lbl={sp:'🌸',su:'☀️',fa:'🍂',wi:'❄️',any:'🌍'}[s]||'?';
+          return`<span class="b-season ${cls}">${lbl}</span>`;
+        }).join('');
+        itemsHTML+=`<div class="bundle-item"><div class="b-check ${ck}" onclick="toggleBundle('${bundle.id}',${i},this)"></div><div class="b-info"><span class="b-name">${item.e} ${item.n}</span><br><span class="b-detail">${seasons} ${item.detail}</span></div></div>`;
+      });
+      card.innerHTML=`<div class="bundle-name">${bundle.name}<span class="bundle-reward-tag">🎁 ${bundle.reward}</span></div><div class="bundle-need">${bundle.pickOf?`<span class="b-pick">${bundle.need}</span>`:bundle.need}</div>${itemsHTML}<div class="bundle-progress"><div class="bundle-progress-bar" style="width:${pct}%"></div></div>`;
+      grid.appendChild(card);
+    });
+    roomDiv.appendChild(grid);
+    container.appendChild(roomDiv);
+  });
+}
+function toggleBundle(bundleId,idx,el){
+  const saved=JSON.parse(localStorage.getItem('va-bundles')||'{}');
+  const key=bundleId+'_'+idx;
+  if(saved[key]){delete saved[key];el.classList.remove('checked');}
+  else{saved[key]=1;el.classList.add('checked');}
+  localStorage.setItem('va-bundles',JSON.stringify(saved));
+  // update progress bar
+  const bundle=BUNDLES.flatMap(r=>r.bundles).find(b=>b.id===bundleId);
+  if(bundle){
+    const needed=bundle.slots||bundle.items.length;
+    const checked=bundle.items.filter((_,i)=>saved[bundleId+'_'+i]).length;
+    const pct=Math.min(100,Math.round(checked/needed*100));
+    const bar=el.closest('.bundle-card').querySelector('.bundle-progress-bar');
+    if(bar)bar.style.width=pct+'%';
+  }
+}
+let resetPending=false;
+let resetTimer=null;
+function resetBundles(){
+  const btn=document.querySelector('.bundles-reset');
+  if(!resetPending){
+    // First click — ask for confirmation
+    resetPending=true;
+    btn.textContent='⚠️ Click again to confirm reset';
+    btn.style.background='rgba(200,100,0,.7)';
+    btn.style.borderColor='rgba(255,160,0,.6)';
+    // Auto-cancel after 3 seconds
+    resetTimer=setTimeout(cancelReset,3000);
+    // Cancel if user clicks anywhere else
+    document.addEventListener('click',cancelResetOnBlur,{once:true,capture:true});
+  } else {
+    // Second click — do the reset
+    clearTimeout(resetTimer);
+    resetPending=false;
+    document.removeEventListener('click',cancelResetOnBlur,true);
+    localStorage.removeItem('va-bundles');
+    buildBundles();
+    btn.textContent='✅ Reset!';
+    btn.style.background='rgba(0,140,0,.6)';
+    btn.style.borderColor='rgba(0,200,0,.5)';
+    setTimeout(()=>{
+      btn.textContent='⚠️ Reset All Checkboxes';
+      btn.style.background='';
+      btn.style.borderColor='';
+    },1400);
+  }
+}
+function cancelReset(){
+  resetPending=false;
+  clearTimeout(resetTimer);
+  const btn=document.querySelector('.bundles-reset');
+  if(btn){btn.textContent='⚠️ Reset All Checkboxes';btn.style.background='';btn.style.borderColor='';}
+}
+function cancelResetOnBlur(e){
+  if(!e.target.closest('.bundles-reset'))cancelReset();
+}
+
+// ─── GIFTS RENDER ───
+function buildGifts(){
+  const grid=document.getElementById('villager-grid');
+  grid.innerHTML='';
+  VILLAGERS.forEach(v=>{
+    const card=document.createElement('div');
+    card.className='villager-card'+(v.marriageable?' marriageable':'');
+    card.dataset.name=v.name.toLowerCase();
+    card.dataset.gifts=v.loves.join(' ').toLowerCase();
+    const bdaySeason=v.bday.split(' ')[0];
+    const bCls={Spring:'b-sp',Summer:'b-su',Fall:'b-fa',Winter:'b-wi'}[bdaySeason]||'b-any';
+    const loveTags=v.loves.map(g=>`<span class="v-gift-tag">${g}</span>`).join('');
+    card.innerHTML=`<div class="v-header"><span class="v-emoji">${v.emoji}</span><div><div class="v-name">${v.name}${v.marriageable?' ❤️':''}</div><div class="v-bday"><span class="b-season ${bCls}" style="font-size:12px;">${v.bday}</span></div></div></div><div class="v-loves-label">LOVES</div><div class="v-loves">${loveTags}</div>`;
+    grid.appendChild(card);
+  });
+}
+function filterVillagers(q){
+  q=q.toLowerCase().trim();
+  document.querySelectorAll('.villager-card').forEach(c=>{
+    const show=!q||c.dataset.name.includes(q)||c.dataset.gifts.includes(q);
+    c.style.display=show?'':'none';
+  });
+}
+
+// buildBundles and buildGifts are called at the end of the main script block below
+</script>
+<script>
+const CROPS={
+  spring:[
+    {name:'🥕 Carrot',        seedCost:0,    seedText:'1 Maple Seed (Raccoon Wife trade)', seedTip:'<b>Ways to get Carrot Seeds:</b><ul><li>Digging up Seed Spots</li><li>Completing Raccoon requests</li><li>Raccoon Wife\'s Shop — trade 1 Maple Seed</li><li>Golden Fishing Treasure Chests (7%)</li><li>Seed Maker (from harvested Carrots)</li><li>First prize from Mayor\'s Prize Machine</li><li>Mystery Boxes / Golden Mystery Boxes</li><li>Crates &amp; barrels in Mines, Skull Cavern, Volcano (2%)</li><li>Iridium Golems drop (50%)</li></ul>',growDays:3,  regrowDays:0,sellBase:35,  yph:1,regrowText:'—',notes:'<span class="badge badge-new">✨ NEW 1.6</span>',xtra:'Fastest crop in game'},
+    {name:'🌿 Parsnip',       seedCost:20,   seedText:'20g',                    growDays:4,  regrowDays:0,sellBase:35,  yph:1,regrowText:'—',notes:'',xtra:'Starter crop'},
+    {name:'🧄 Garlic',        seedCost:40,   seedText:'40g',                    growDays:4,  regrowDays:0,sellBase:60,  yph:1,regrowText:'—',notes:'<span class="badge badge-year2">📅 Yr 2+</span>',xtra:''},
+    {name:'🌷 Tulip',         seedCost:20,   seedText:'20g',                    growDays:6,  regrowDays:0,sellBase:30,  yph:1,regrowText:'—',notes:'',xtra:'Flower 🌼'},
+    {name:'🥬 Kale',          seedCost:70,   seedText:'70g',                    growDays:6,  regrowDays:0,sellBase:110, yph:1,regrowText:'—',notes:'',xtra:''},
+    {name:'🥔 Potato',        seedCost:50,   seedText:'50g',                    growDays:6,  regrowDays:0,sellBase:100, yph:1,regrowText:'—',notes:'',xtra:'~25% extra harvest'},
+    {name:'🌾 Unmilled Rice',  seedCost:40,   seedText:'40g',                    growDays:8,  regrowDays:0,sellBase:30,  yph:1,regrowText:'—',notes:'',xtra:'Mill → 100g; 6d irrigated'},
+    {name:'🫘 Green Bean',    seedCost:60,   seedText:'60g',                    growDays:10, regrowDays:3,sellBase:40,  yph:1,regrowText:'3d',notes:'<span class="badge badge-trellis">🪜 TRELLIS</span> <span class="badge badge-regrow">♻ REGROWS</span>',xtra:''},
+    {name:'🎵 Blue Jazz',     seedCost:30,   seedText:'30g',                    growDays:7,  regrowDays:0,sellBase:50,  yph:1,regrowText:'—',notes:'',xtra:'Flower 🌼'},
+    {name:'☕ Coffee Bean',   seedCost:2500, seedText:'2,500g (then free)',      growDays:10, regrowDays:2,sellBase:15,  yph:4,regrowText:'2d',notes:'<span class="badge badge-multi">🌍 Spr/Sum</span> <span class="badge badge-regrow">♻ REGROWS</span>',xtra:'4 beans/harvest; use as seeds'},
+    {name:'🌿 Rhubarb',       seedCost:100,  seedText:'100g (Oasis)',            growDays:13, regrowDays:0,sellBase:220, yph:1,regrowText:'—',notes:'',xtra:'Desert shop only'},
+    {name:'🍓 Strawberry',    seedCost:100,  seedText:'100g (Egg Festival)',     growDays:8,  regrowDays:4,sellBase:120, yph:1,regrowText:'4d',notes:'<span class="badge badge-regrow">♻ REGROWS</span>',xtra:'Festival only! Best spring crop'},
+    {name:'🥦 Cauliflower',   seedCost:80,   seedText:'80g',                    growDays:12, regrowDays:0,sellBase:175, yph:1,regrowText:'—',notes:'',xtra:'Giant crop candidate 🏔️'},
+  ],
+  summer:[
+    {name:'🥒 Summer Squash', seedCost:0,    seedText:'Raccoon Wife trade / artifact spots', seedTip:'<b>Ways to get Summer Squash Seeds:</b><ul><li>Digging up Seed Spots</li><li>Completing Raccoon requests</li><li>Raccoon Wife\'s Shop</li><li>Golden Fishing Treasure Chests</li><li>Seed Maker (from harvested Summer Squash)</li><li>Mystery Boxes / Golden Mystery Boxes</li><li>Crates &amp; barrels in Mines, Skull Cavern, Volcano</li></ul>',growDays:5,  regrowDays:3,sellBase:65,  yph:1,regrowText:'3d',notes:'<span class="badge badge-new">✨ NEW 1.6</span> <span class="badge badge-regrow">♻ REGROWS</span>',xtra:''},
+    {name:'🌶️ Hot Pepper',   seedCost:40,   seedText:'40g',                    growDays:5,  regrowDays:3,sellBase:40,  yph:1,regrowText:'3d',notes:'<span class="badge badge-regrow">♻ REGROWS</span>',xtra:''},
+    {name:'🌿 Radish',        seedCost:40,   seedText:'40g',                    growDays:6,  regrowDays:0,sellBase:90,  yph:1,regrowText:'—',notes:'',xtra:''},
+    {name:'🌸 Poppy',         seedCost:100,  seedText:'100g',                   growDays:7,  regrowDays:0,sellBase:140, yph:1,regrowText:'—',notes:'',xtra:'Flower 🌼'},
+    {name:'🌿 Wheat',         seedCost:10,   seedText:'10g',                    growDays:4,  regrowDays:0,sellBase:25,  yph:1,regrowText:'—',notes:'<span class="badge badge-multi">🌍 Sum/Fall</span>',xtra:''},
+    {name:'🍅 Tomato',        seedCost:50,   seedText:'50g',                    growDays:11, regrowDays:4,sellBase:60,  yph:1,regrowText:'4d',notes:'<span class="badge badge-regrow">♻ REGROWS</span>',xtra:''},
+    {name:'🌺 Red Cabbage',   seedCost:100,  seedText:'100g',                   growDays:9,  regrowDays:0,sellBase:260, yph:1,regrowText:'—',notes:'<span class="badge badge-year2">📅 Yr 2+</span>',xtra:''},
+    {name:'🍈 Melon',         seedCost:80,   seedText:'80g',                    growDays:12, regrowDays:0,sellBase:250, yph:1,regrowText:'—',notes:'',xtra:'Giant crop candidate 🏔️'},
+    {name:'🫐 Blueberry',     seedCost:80,   seedText:'80g',                    growDays:13, regrowDays:4,sellBase:50,  yph:3,regrowText:'4d',notes:'<span class="badge badge-regrow">♻ REGROWS</span>',xtra:'3 berries per harvest!'},
+    {name:'⭐ Starfruit',     seedCost:400,  seedText:'400g (Oasis)',            growDays:13, regrowDays:0,sellBase:750, yph:1,regrowText:'—',notes:'',xtra:'Highest base sell value!'},
+    {name:'🍺 Hops',          seedCost:60,   seedText:'60g',                    growDays:11, regrowDays:1,sellBase:25,  yph:1,regrowText:'1d',notes:'<span class="badge badge-trellis">🪜 TRELLIS</span> <span class="badge badge-regrow">♻ DAILY</span>',xtra:'Keg → Pale Ale 200g 🍺'},
+    {name:'🌻 Sunflower',     seedCost:200,  seedText:'200g',                   growDays:8,  regrowDays:0,sellBase:80,  yph:1,regrowText:'—',notes:'<span class="badge badge-multi">🌍 Sum/Fall</span>',xtra:'Drops free seeds'},
+    {name:'🌽 Corn',          seedCost:150,  seedText:'150g',                   growDays:14, regrowDays:4,sellBase:50,  yph:1,regrowText:'4d',notes:'<span class="badge badge-multi">🌍 Sum/Fall</span> <span class="badge badge-regrow">♻ REGROWS</span>',xtra:''},
+  ],
+  fall:[
+    {name:'🥬 Bok Choy',      seedCost:50,   seedText:'50g',                    growDays:4,  regrowDays:0,sellBase:80,  yph:1,regrowText:'—',notes:'',xtra:''},
+    {name:'🍆 Eggplant',      seedCost:20,   seedText:'20g',                    growDays:5,  regrowDays:5,sellBase:60,  yph:1,regrowText:'5d',notes:'<span class="badge badge-regrow">♻ REGROWS</span>',xtra:''},
+    {name:'🌿 Wheat',         seedCost:10,   seedText:'(carry from Summer)',    growDays:4,  regrowDays:0,sellBase:25,  yph:1,regrowText:'—',notes:'<span class="badge badge-multi">🌍 Sum/Fall</span>',xtra:''},
+    {name:'🥦 Broccoli',      seedCost:0,    seedText:'Raccoon Wife trade / artifact spots', seedTip:'<b>Ways to get Broccoli Seeds:</b><ul><li>Digging up Seed Spots</li><li>Completing Raccoon requests</li><li>Raccoon Wife\'s Shop</li><li>Golden Fishing Treasure Chests</li><li>Seed Maker (from harvested Broccoli)</li><li>Mystery Boxes / Golden Mystery Boxes</li><li>Crates &amp; barrels in Mines, Skull Cavern, Volcano</li></ul>',growDays:6,  regrowDays:0,sellBase:70,  yph:1,regrowText:'—',notes:'<span class="badge badge-new">✨ NEW 1.6</span>',xtra:''},
+    {name:'🫚 Beet',          seedCost:20,   seedText:'20g (Desert)',           growDays:6,  regrowDays:0,sellBase:100, yph:1,regrowText:'—',notes:'',xtra:''},
+    {name:'🌿 Amaranth',      seedCost:70,   seedText:'70g',                    growDays:7,  regrowDays:0,sellBase:150, yph:1,regrowText:'—',notes:'',xtra:''},
+    {name:'🫐 Cranberry',     seedCost:240,  seedText:'240g',                   growDays:7,  regrowDays:5,sellBase:75,  yph:2,regrowText:'5d',notes:'<span class="badge badge-regrow">♻ REGROWS</span>',xtra:'2 berries per harvest!'},
+    {name:'🌿 Artichoke',     seedCost:30,   seedText:'30g',                    growDays:8,  regrowDays:0,sellBase:160, yph:1,regrowText:'—',notes:'<span class="badge badge-year2">📅 Yr 2+</span>',xtra:''},
+    {name:'🍇 Grape',         seedCost:60,   seedText:'60g',                    growDays:10, regrowDays:3,sellBase:80,  yph:1,regrowText:'3d',notes:'<span class="badge badge-trellis">🪜 TRELLIS</span> <span class="badge badge-regrow">♻ REGROWS</span>',xtra:''},
+    {name:'🍠 Yam',           seedCost:60,   seedText:'60g',                    growDays:10, regrowDays:0,sellBase:160, yph:1,regrowText:'—',notes:'',xtra:''},
+    {name:'🌻 Sunflower',     seedCost:200,  seedText:'(carry from Summer)',    growDays:8,  regrowDays:0,sellBase:80,  yph:1,regrowText:'—',notes:'<span class="badge badge-multi">🌍 Sum/Fall</span>',xtra:'Drops free seeds'},
+    {name:'🌸 Fairy Rose',    seedCost:200,  seedText:'200g',                   growDays:12, regrowDays:0,sellBase:290, yph:1,regrowText:'—',notes:'',xtra:'Flower 🌼'},
+    {name:'🎃 Pumpkin',       seedCost:100,  seedText:'100g',                   growDays:13, regrowDays:0,sellBase:320, yph:1,regrowText:'—',notes:'',xtra:'Giant crop candidate 🏔️'},
+    {name:'🌽 Corn',          seedCost:150,  seedText:'(carry from Summer)',    growDays:14, regrowDays:4,sellBase:50,  yph:1,regrowText:'4d',notes:'<span class="badge badge-multi">🌍 Sum/Fall</span> <span class="badge badge-regrow">♻ REGROWS</span>',xtra:''},
+    {name:'💎 Sweet Gem Berry',seedCost:1000, seedText:'1,000g (Rare Seed)',    growDays:24, regrowDays:0,sellBase:3000,yph:1,regrowText:'—',notes:'',xtra:'Most profitable raw crop!'},
+  ],
+  winter:[
+    {name:'❄️ Winter Seeds',  seedCost:0,    seedText:'Crafted (forage items)', growDays:7,  regrowDays:0,sellBase:15,  yph:1,regrowText:'—',notes:'',xtra:'Random forage crop'},
+    {name:'🍈 Powdermelon',   seedCost:2500, seedText:'2,500g (Winter Star)',   growDays:7,  regrowDays:0,sellBase:60,  yph:1,regrowText:'—',notes:'<span class="badge badge-new">✨ NEW 1.6</span>',xtra:'Giant crop candidate 🏔️'},
+    {name:'🍵 Tea Leaves',    seedCost:0,    seedText:'Tea Sapling (crafted)',  growDays:20, regrowDays:0,sellBase:50,  yph:1,regrowText:'Days 22–28',notes:'<span class="badge badge-special">🌿 BUSH</span>',xtra:'Seasonal bush; not tilled soil'},
+  ],
+  multi:[
+    {name:'🌾 Wheat',          seasons:'Sum / Fall',       seedCost:10,   seedText:'10g',                        growDays:4,  regrowDays:0,sellBase:25,  yph:1,regrowText:'—', notes:'<span class="badge badge-multi">🌍 MULTI</span>',xtra:'Bridges season change'},
+    {name:'🌽 Corn',           seasons:'Sum / Fall',       seedCost:150,  seedText:'150g',                       growDays:14, regrowDays:4,sellBase:50,  yph:1,regrowText:'4d',notes:'<span class="badge badge-multi">🌍 MULTI</span> <span class="badge badge-regrow">♻ REGROWS</span>',xtra:''},
+    {name:'🌻 Sunflower',      seasons:'Sum / Fall',       seedCost:200,  seedText:'200g',                       growDays:8,  regrowDays:0,sellBase:80,  yph:1,regrowText:'—', notes:'<span class="badge badge-multi">🌍 MULTI</span>',xtra:'Drops seeds; oil maker'},
+    {name:'☕ Coffee Bean',    seasons:'Spr / Sum',        seedCost:2500, seedText:'2,500g (then free)',          growDays:10, regrowDays:2,sellBase:15,  yph:4,regrowText:'2d',notes:'<span class="badge badge-multi">🌍 MULTI</span> <span class="badge badge-regrow">♻ REGROWS</span>',xtra:'4 beans/harvest; use as seeds!'},
+    {name:'🌺 Ancient Fruit',  seasons:'Greenhouse / Any', seedCost:0,    seedText:'Rare (mines / Seed Maker)',  growDays:28, regrowDays:7,sellBase:550, yph:1,regrowText:'7d',notes:'<span class="badge badge-regrow">♻ REGROWS</span> <span class="badge badge-special">🌿 SPECIAL</span>',xtra:'Best greenhouse crop!'},
+    {name:'🍍 Pineapple',      seasons:'Ginger Island',   seedCost:0,    seedText:'Magma Cap (trade)',           growDays:14, regrowDays:7,sellBase:300, yph:1,regrowText:'7d',notes:'<span class="badge badge-regrow">♻ REGROWS</span> <span class="badge badge-special">🌴 ISLAND</span>',xtra:''},
+    {name:'🥜 Taro Root',      seasons:'Ginger Island',   seedCost:0,    seedText:'2 Bone Fragments (trade)',    growDays:10, regrowDays:0,sellBase:100, yph:1,regrowText:'—', notes:'<span class="badge badge-special">🌴 ISLAND</span>',xtra:'Grows near water (6d irrigated)'},
+    {name:'🌵 Cactus Fruit',   seasons:'Greenhouse only', seedCost:0,    seedText:'Oasis',                      growDays:12, regrowDays:3,sellBase:75,  yph:1,regrowText:'3d',notes:'<span class="badge badge-regrow">♻ REGROWS</span> <span class="badge badge-special">🌿 SPECIAL</span>',xtra:''},
+  ],
+};
+
+// ════════════════════════════════════════════════
+//  FISH DATA
+//  seasons: array of 'spring','summer','fall','winter','any'
+//  tags: array for filtering ('legendary','crabpot','night','mine')
+//  difficulty: 1-10
+//  emoji: closest representation
+// ════════════════════════════════════════════════
+const FISH=[
+  // OCEAN
+  {emoji:'🐟',name:'Sardine',      price:40,  location:'Ocean',              seasons:['spring','fall','winter'],  time:'6am–7pm',       weather:'Any',   difficulty:3,  tags:[]},
+  {emoji:'🐟',name:'Albacore',     price:75,  location:'Ocean',              seasons:['fall','winter'],           time:'6am–11am, 6pm–2am', weather:'Any', difficulty:5,  tags:[]},
+  {emoji:'🐟',name:'Anchovy',      price:30,  location:'Ocean',              seasons:['spring','fall'],           time:'Any',           weather:'Any',   difficulty:2,  tags:[]},
+  {emoji:'🐟',name:'Herring',      price:30,  location:'Ocean',              seasons:['spring','winter'],         time:'Any',           weather:'Any',   difficulty:2,  tags:[]},
+  {emoji:'🫧',name:'Eel',          price:85,  location:'Ocean',              seasons:['spring','fall'],           time:'4pm–2am',       weather:'Rain',  difficulty:6,  tags:[]},
+  {emoji:'🐟',name:'Flounder',     price:100, location:'Ocean / Ginger Island',seasons:['spring','summer'],        time:'6am–8pm',       weather:'Any',   difficulty:5,  tags:[]},
+  {emoji:'🐟',name:'Halibut',      price:80,  location:'Ocean',              seasons:['spring','summer','winter'],time:'6am–11am, 7pm–2am',weather:'Any', difficulty:4, tags:[]},
+  {emoji:'🐠',name:'Pufferfish',   price:200, location:'Ocean',              seasons:['summer'],                  time:'12pm–4pm',      weather:'Sunny', difficulty:3,  tags:[]},
+  {emoji:'🐙',name:'Octopus',      price:150, location:'Ocean',              seasons:['summer'],                  time:'6am–1pm',       weather:'Any',   difficulty:8,  tags:[]},
+  {emoji:'🎏',name:'Red Mullet',   price:75,  location:'Ocean',              seasons:['summer','winter'],         time:'6am–7pm',       weather:'Any',   difficulty:4,  tags:[]},
+  {emoji:'🦞',name:'Red Snapper',  price:50,  location:'Ocean',              seasons:['summer','fall'],           time:'6am–7pm',       weather:'Rain',  difficulty:3,  tags:[],  note:'Winter possible with Rain Totem only'},
+  {emoji:'🐡',name:'Tuna',         price:100, location:'Ocean',              seasons:['summer','winter'],         time:'6am–7pm',       weather:'Any',   difficulty:5,  tags:[]},
+  {emoji:'🎏',name:'Super Cucumber',price:250,location:'Ocean',              seasons:['summer','fall'],           time:'6pm–2am',       weather:'Any',   difficulty:8,  tags:[]},
+  {emoji:'🫧',name:'Sea Cucumber', price:75,  location:'Ocean',              seasons:['fall','winter'],           time:'6am–7pm',       weather:'Any',   difficulty:2,  tags:[]},
+  {emoji:'🦑',name:'Squid',        price:80,  location:'Ocean',              seasons:['winter'],                  time:'6pm–2am',       weather:'Any',   difficulty:7,  tags:[]},
+  {emoji:'🫧',name:'Sea Jelly',    price:125, location:'Ocean',              seasons:['any'],                     time:'Any',           weather:'Any',   difficulty:1,  tags:[]},
+  {emoji:'🐟',name:'Tilapia',      price:75,  location:'Ocean / Ginger Island',seasons:['summer','fall'],         time:'6am–2pm',       weather:'Any',   difficulty:5,  tags:[]},
+  // RIVER
+  {emoji:'🌞',name:'Sunfish',      price:30,  location:'River',              seasons:['spring','summer'],         time:'6am–7pm',       weather:'Sunny', difficulty:2,  tags:[]},
+  {emoji:'🐟',name:'Smallmouth Bass',price:50,location:'Town River / Forest Pond',seasons:['spring','fall'],     time:'Any',           weather:'Any',   difficulty:3,  tags:[]},
+  {emoji:'🐈',name:'Catfish',      price:200, location:'River / Secret Woods',seasons:['spring','fall'],         time:'6am–12am',      weather:'Rain',  difficulty:8,  tags:[]},
+  {emoji:'🌧️',name:'Shad',         price:60,  location:'River',              seasons:['spring','summer','fall'],  time:'9am–2am',       weather:'Rain',  difficulty:3,  tags:[]},
+  {emoji:'🐟',name:'Pike',         price:100, location:'River / Forest Pond',seasons:['summer','winter'],        time:'Any',           weather:'Any',   difficulty:6,  tags:[]},
+  {emoji:'🌈',name:'Rainbow Trout',price:65,  location:'River / Mountain Lake',seasons:['summer'],               time:'6am–7pm',       weather:'Sunny', difficulty:5,  tags:[]},
+  {emoji:'🐟',name:'Dorado',       price:100, location:'Forest River',       seasons:['summer'],                  time:'6am–7pm',       weather:'Any',   difficulty:8,  tags:[]},
+  {emoji:'🐟',name:'Salmon',       price:75,  location:'River',              seasons:['fall'],                    time:'6am–7pm',       weather:'Any',   difficulty:5,  tags:[]},
+  {emoji:'🐟',name:'Walleye',      price:105, location:'River / Mountain Lake / Forest Pond',seasons:['fall','winter'],time:'12pm–2am',weather:'Rain', difficulty:5,  tags:[]},
+  {emoji:'🐯',name:'Tiger Trout',  price:150, location:'River / Mountain Lake',seasons:['fall','winter'],         time:'6am–7pm',       weather:'Any',   difficulty:9,  tags:[]},
+  {emoji:'🐟',name:'Lingcod',      price:120, location:'River / Mountain Lake',seasons:['winter'],                time:'Any',           weather:'Any',   difficulty:8,  tags:[]},
+  {emoji:'🐟',name:'Perch',        price:55,  location:'River / Mountain Lake / Forest Pond',seasons:['winter'],time:'Any',           weather:'Any',   difficulty:3,  tags:[]},
+  {emoji:'🐟',name:'Bream',        price:45,  location:'River',              seasons:['any'],                     time:'6pm–2am',       weather:'Any',   difficulty:3,  tags:[]},
+  {emoji:'🐟',name:'Chub',         price:50,  location:'Mountain Lake / Forest River',seasons:['any'],            time:'Any',           weather:'Any',   difficulty:2,  tags:[]},
+  {emoji:'🫧',name:'River Jelly',  price:125, location:'River',              seasons:['any'],                     time:'Any',           weather:'Any',   difficulty:1,  tags:[]},
+  // MOUNTAIN LAKE
+  {emoji:'🐂',name:'Bullhead',     price:75,  location:'Mountain Lake',      seasons:['any'],                     time:'Any',           weather:'Any',   difficulty:3,  tags:[]},
+  {emoji:'🐟',name:'Carp',         price:30,  location:'Mountain Lake / Sewers / Secret Woods',seasons:['any'],  time:'Any',           weather:'Any',   difficulty:1,  tags:[]},
+  {emoji:'🐟',name:'Largemouth Bass',price:100,location:'Mountain Lake',     seasons:['any'],                     time:'6am–7pm',       weather:'Any',   difficulty:4,  tags:[]},
+  {emoji:'🐟',name:'Sturgeon',     price:200, location:'Mountain Lake',      seasons:['summer','winter'],         time:'6am–7pm',       weather:'Any',   difficulty:8,  tags:[]},
+  {emoji:'🌙',name:'Midnight Carp', price:150,location:'Mountain Lake / Forest Pond / Ginger Island',seasons:['fall','winter'],time:'10pm–2am',weather:'Any',difficulty:3,tags:[]},
+  // MINES
+  {emoji:'👻',name:'Ghostfish',    price:45,  location:'Mines (floors 20, 60)',seasons:['any'],                   time:'Any',           weather:'Any',   difficulty:5,  tags:['mine']},
+  {emoji:'🧱',name:'Stonefish',    price:300, location:'Mines (floor 20)',   seasons:['any'],                     time:'Any',           weather:'Any',   difficulty:9,  tags:['mine']},
+  {emoji:'🧊',name:'Ice Pip',      price:500, location:'Mines (floor 60)',   seasons:['any'],                     time:'Any',           weather:'Any',   difficulty:9,  tags:['mine']},
+  {emoji:'🌋',name:'Lava Eel',     price:700, location:'Mines (floor 100) / Volcano',seasons:['any'],            time:'Any',           weather:'Any',   difficulty:10, tags:['mine']},
+  {emoji:'🫧',name:'Cave Jelly',   price:125, location:'Mines (floor 11)',   seasons:['any'],                     time:'Any',           weather:'Any',   difficulty:1,  tags:['mine']},
+  // SPECIAL LOCATIONS
+  {emoji:'🐟',name:'Woodskip',     price:75,  location:'Secret Woods / Forest Farm',seasons:['any'],             time:'Any',           weather:'Any',   difficulty:7,  tags:[]},
+  {emoji:'🐟',name:'Void Salmon',  price:150, location:"Witch's Swamp",      seasons:['any'],                     time:'Any',           weather:'Any',   difficulty:7,  tags:[]},
+  {emoji:'🟢',name:'Slimejack',    price:100, location:'Mutant Bug Lair',    seasons:['any'],                     time:'Any',           weather:'Any',   difficulty:5,  tags:[]},
+  {emoji:'🦎',name:'Sandfish',     price:75,  location:'The Desert',         seasons:['any'],                     time:'6am–8pm',       weather:'Any',   difficulty:5,  tags:[]},
+  {emoji:'🦂',name:'Scorpion Carp',price:150, location:'The Desert',         seasons:['any'],                     time:'6am–8pm',       weather:'Any',   difficulty:9,  tags:[]},
+  {emoji:'🐟',name:'Goby',         price:150, location:'Cindersap Waterfall',seasons:['any'],                     time:'Any',           weather:'Any',   difficulty:5,  tags:[]},
+  // NIGHT MARKET
+  {emoji:'🟣',name:'Blobfish',     price:500, location:'Night Market Submarine',seasons:['winter'],              time:'5pm–2am',       weather:'Any',   difficulty:8,  tags:['night']},
+  {emoji:'🦑',name:'Midnight Squid',price:100,location:'Night Market Submarine',seasons:['winter'],              time:'5pm–2am',       weather:'Any',   difficulty:4,  tags:['night']},
+  {emoji:'👁️',name:'Spookfish',    price:220, location:'Night Market Submarine',seasons:['winter'],              time:'5pm–2am',       weather:'Any',   difficulty:6,  tags:['night']},
+  // GINGER ISLAND
+  {emoji:'🔵',name:'Blue Discus',  price:120, location:'Ginger Island (Pond/River)',seasons:['any'],             time:'Any',           weather:'Any',   difficulty:6,  tags:['island']},
+  {emoji:'🦁',name:'Lionfish',     price:100, location:'Ginger Island (Ocean)',seasons:['any'],                   time:'Any',           weather:'Any',   difficulty:5,  tags:['island']},
+  {emoji:'🩷',name:'Stingray',     price:180, location:"Ginger Island (Pirate's Cove)",seasons:['any'],          time:'Any',           weather:'Any',   difficulty:8,  tags:['island']},
+  // LEGENDARY
+  {emoji:'👑',name:'Legend',        price:5000,location:'Mountain Lake (near log)',seasons:['spring'],            time:'Any',           weather:'Rain',  difficulty:10, tags:['legendary'],lvlReq:10,note:'Rainy day only! Level 10 required.'},
+  {emoji:'👑',name:'Crimsonfish',   price:1500,location:'East Beach Pier (cast far east)',seasons:['summer'],     time:'Any',           weather:'Any',   difficulty:10, tags:['legendary'],lvlReq:5, note:'Cast from the very end of the east pier. Level 5+.'},
+  {emoji:'👑',name:'Angler',        price:900, location:'North of JojaMart bridge',seasons:['fall'],              time:'Any',           weather:'Any',   difficulty:10, tags:['legendary'],lvlReq:3, note:'North of the wooden bridge near JojaMart. Level 3+.'},
+  {emoji:'👑',name:'Glacierfish',   price:1000,location:"Arrowhead Island, Cindersap Forest tip",seasons:['winter'],time:'Any',        weather:'Any',   difficulty:10, tags:['legendary'],lvlReq:6, note:'Cast from the southern tip of Arrowhead Island. Level 6+.'},
+  {emoji:'☢️',name:'Mutant Carp',   price:1000,location:'Sewers',             seasons:['any'],                     time:'Any',           weather:'Any',   difficulty:10, tags:['legendary'],lvlReq:0, note:'Unlocked after donating 60 items to the museum.'},
+  // LEGENDARY II (Qi quest)
+  {emoji:'👑',name:'Legend II',     price:5000,location:'Mountain Lake (near log)',seasons:['spring'],            time:'Any',           weather:'Rain',  difficulty:10, tags:['legendary'],lvlReq:10,note:"Qi's Extended Family quest. Same spot as Legend."},
+  {emoji:'👑',name:'Ms. Angler',    price:900, location:'North of JojaMart bridge',seasons:['fall'],              time:'Any',           weather:'Any',   difficulty:10, tags:['legendary'],lvlReq:3, note:"Qi's Extended Family quest. Same spot as Angler."},
+  {emoji:'👑',name:'Son of Crimsonfish',price:1500,location:'East Beach Pier',seasons:['summer'],                 time:'Any',           weather:'Any',   difficulty:10, tags:['legendary'],lvlReq:5, note:"Qi's Extended Family quest."},
+  {emoji:'👑',name:'Glacierfish Jr.',price:1000,location:'Arrowhead Island',  seasons:['winter'],                 time:'Any',           weather:'Any',   difficulty:10, tags:['legendary'],lvlReq:6, note:"Qi's Extended Family quest."},
+  {emoji:'♻️',name:'Radioactive Carp',price:1000,location:'Sewers',          seasons:['any'],                     time:'Any',           weather:'Any',   difficulty:10, tags:['legendary'],lvlReq:0, note:"Qi's Extended Family quest."},
+  // CRAB POT — saltwater
+  {emoji:'🦀',name:'Crab',          price:100, location:'Ocean (Crab Pot)',   seasons:['any'],                     time:'Any',           weather:'Any',   difficulty:0,  tags:['crabpot']},
+  {emoji:'🦞',name:'Lobster',       price:120, location:'Ocean (Crab Pot)',   seasons:['any'],                     time:'Any',           weather:'Any',   difficulty:0,  tags:['crabpot']},
+  {emoji:'🦐',name:'Shrimp',        price:60,  location:'Ocean (Crab Pot)',   seasons:['any'],                     time:'Any',           weather:'Any',   difficulty:0,  tags:['crabpot']},
+  {emoji:'🦪',name:'Oyster',        price:40,  location:'Ocean (Crab Pot)',   seasons:['any'],                     time:'Any',           weather:'Any',   difficulty:0,  tags:['crabpot']},
+  {emoji:'🦪',name:'Mussel',        price:30,  location:'Ocean (Crab Pot)',   seasons:['any'],                     time:'Any',           weather:'Any',   difficulty:0,  tags:['crabpot']},
+  {emoji:'🐚',name:'Clam',          price:50,  location:'Ocean (Crab Pot)',   seasons:['any'],                     time:'Any',           weather:'Any',   difficulty:0,  tags:['crabpot']},
+  {emoji:'🐚',name:'Cockle',        price:50,  location:'Ocean (Crab Pot)',   seasons:['any'],                     time:'Any',           weather:'Any',   difficulty:0,  tags:['crabpot']},
+  // CRAB POT — freshwater
+  {emoji:'🦞',name:'Crayfish',      price:75,  location:'Freshwater (Crab Pot)',seasons:['any'],                   time:'Any',           weather:'Any',   difficulty:0,  tags:['crabpot']},
+  {emoji:'🐌',name:'Periwinkle',    price:20,  location:'Freshwater (Crab Pot)',seasons:['any'],                   time:'Any',           weather:'Any',   difficulty:0,  tags:['crabpot']},
+  {emoji:'🐌',name:'Snail',         price:65,  location:'Freshwater (Crab Pot)',seasons:['any'],                   time:'Any',           weather:'Any',   difficulty:0,  tags:['crabpot']},
+];
+
+// ── CROP ENGINE ──
+const Q_MULT  = {none:1.00,basic:1.10,qual:1.22,delux:1.35};
+const SP_MULT = {none:1.00,sg:0.90,dsg:0.75,hsg:0.67};
+let state = {speed:'none',agri:false,quality:'none',tiller:false};
+const sortState = {};
+
+function modGrow(d){ let m=SP_MULT[state.speed]; if(state.agri)m*=0.90; return Math.max(1,Math.ceil(d*m)); }
+function calcGPD(crop,md){
+  const SEASON=28,sell=crop.sellBase*crop.yph*Q_MULT[state.quality]*(state.tiller?1.1:1.0),seed=crop.seedCost;
+  if(crop.regrowDays===0){ const h=Math.floor(SEASON/md); if(!h)return null; return((h*sell)-(h*seed))/(h*md); }
+  else{ if(md>SEASON)return null; const rh=Math.floor((SEASON-md)/crop.regrowDays),th=1+rh,gd=md+rh*crop.regrowDays; return((th*sell)-seed)/gd; }
+}
+function gpdCls(v){ if(v===null||isNaN(v)||v<0)return'gpd-low'; if(v>=60)return'gpd-star'; if(v>=30)return'gpd-high'; if(v>=15)return'gpd-good'; if(v>=5)return'gpd-ok'; return'gpd-low'; }
+function fmtGPD(v){ if(v===null||isNaN(v))return'—'; if(v<0)return`<span style="color:#aa2222">${v.toFixed(1)}</span>`; return v.toFixed(1); }
+function fmtSell(crop){ const v=Math.round(crop.sellBase*Q_MULT[state.quality]*(state.tiller?1.1:1.0)); return crop.yph>1?`${v}g ×${crop.yph}/harvest`:`${v}g`; }
+
+function renderTable(tid,crops,hasSeason){
+  const tb=document.querySelector(`#${tid} tbody`); tb.innerHTML='';
+  crops.forEach(crop=>{
+    const md=modGrow(crop.growDays),boosted=md<crop.growDays,gpd=calcGPD(crop,md);
+    const tr=document.createElement('tr');
+    let h=`<td class="name">${crop.name}</td>`;
+    if(hasSeason)h+=`<td>${crop.seasons}</td>`;
+    if(crop.seedTip){
+      h+=`<td class="has-tip" data-seed-tip="${crop.seedTip.replace(/"/g,'&quot;')}">${crop.seedText}</td>`;
+    } else {
+      h+=`<td>${crop.seedText}</td>`;
+    }
+    h+=`<td class="days-cell${boosted?' boosted':''}">${md}</td><td>${crop.regrowText}</td><td>${fmtSell(crop)}</td><td class="${gpdCls(gpd)}">${fmtGPD(gpd)}</td><td>${crop.notes}${crop.xtra?' '+crop.xtra:''}</td>`;
+    tr.innerHTML=h; tr.dataset.seed=crop.seedCost; tr.dataset.grow=md; tr.dataset.sell=crop.sellBase*crop.yph; tr.dataset.gpd=gpd??-9999;
+    tb.appendChild(tr);
+  });
+}
+function renderAll(){
+  renderTable('tbl-spring',CROPS.spring,false); renderTable('tbl-summer',CROPS.summer,false);
+  renderTable('tbl-fall',CROPS.fall,false);     renderTable('tbl-winter',CROPS.winter,false);
+  renderTable('tbl-multi',CROPS.multi,true);
+  updateSummary(); syncBtns();
+}
+function updateSummary(){
+  const parts=[],sl={sg:'Speed-Gro (−10%)',dsg:'Deluxe Speed-Gro (−25%)',hsg:'Hyper Speed-Gro (−33%)'};
+  if(state.speed!=='none')parts.push('🌱 '+sl[state.speed]);
+  if(state.agri)parts.push('🤠 Agriculturist (extra −10%)');
+  const ql={basic:'Basic Fert (+~10%)',qual:'Quality Fert (+~22%)',delux:'Deluxe Fert (+~35%, Iridium)'};
+  if(state.quality!=='none')parts.push('✨ '+ql[state.quality]);
+  if(state.tiller)parts.push('🎯 Tiller (+10%)');
+  document.getElementById('active-summary').textContent=parts.length?'▶ Active: '+parts.join('  |  '):'';
+}
+function syncBtns(){
+  ['none','sg','dsg','hsg'].forEach(k=>document.getElementById('sp-'+k).className='mod-btn'+(state.speed===k?' sel-speed':''));
+  document.getElementById('ag-off').className='mod-btn'+(!state.agri?' sel-off':'');
+  document.getElementById('ag-on').className='mod-btn'+(state.agri?' sel-speed':'');
+  ['none','basic','qual','delux'].forEach(k=>document.getElementById('qf-'+k).className='mod-btn'+(state.quality===k?' sel-quality':''));
+  document.getElementById('tl-off').className='mod-btn'+(!state.tiller?' sel-off':'');
+  document.getElementById('tl-on').className='mod-btn'+(state.tiller?' sel-tiller':'');
+}
+function setSpeed(v){state.speed=v;renderAll();} function setAgri(v){state.agri=v;renderAll();}
+function setQuality(v){state.quality=v;renderAll();} function setTiller(v){state.tiller=v;renderAll();}
+
+// crop table sort
+document.addEventListener('click',e=>{
+  const th=e.target.closest('thead th.sortable'); if(!th)return;
+  const table=th.closest('table'),col=th.dataset.col,key=table.id+':'+col;
+  const asc=sortState[key]!=='asc'; sortState[key]=asc?'asc':'desc';
+  table.querySelectorAll('thead th').forEach(h=>h.classList.remove('sort-asc','sort-desc'));
+  th.classList.add(asc?'sort-asc':'sort-desc');
+  const tb=table.querySelector('tbody'),rows=Array.from(tb.querySelectorAll('tr'));
+  rows.sort((a,b)=>{const av=parseFloat(a.dataset[col])||0,bv=parseFloat(b.dataset[col])||0; return asc?av-bv:bv-av;});
+  rows.forEach(r=>tb.appendChild(r));
+});
+
+// tab / section switching
+function showTab(id,btn){
+  document.querySelectorAll('.season-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active'); btn.classList.add('active');
+}
+function showSection(id,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('section-'+id).classList.add('active'); btn.classList.add('active');
+}
+
+// ── FISHING ENGINE ──
+function buildFishGrid(){
+  const grid=document.getElementById('fish-grid'); grid.innerHTML='';
+  FISH.sort((a,b)=>a.name.localeCompare(b.name));
+  FISH.forEach((fish,i)=>{
+    const isLeg=fish.tags.includes('legendary');
+    const isCrab=fish.tags.includes('crabpot');
+    const card=document.createElement('div');
+    card.className='fish-card'+(isLeg?' legendary-card':'');
+    card.dataset.idx=i;
+    // season tags for filtering
+    const sArr=fish.seasons.includes('any')?['any']:fish.seasons;
+    sArr.forEach(s=>card.dataset['s_'+s]='1');
+    if(isLeg)card.dataset.s_legendary='1';
+    if(isCrab)card.dataset.s_crabpot='1';
+
+    card.innerHTML=`${isLeg?'<span class="crown">👑</span>':''}<span class="fish-emoji">${fish.emoji}</span><span class="fish-name">${fish.name}</span><span class="fish-price">${fish.price}g</span>`;
+    card.addEventListener('mouseenter',e=>showFishTip(fish,e));
+    card.addEventListener('mousemove',e=>moveTip(e));
+    card.addEventListener('mouseleave',hideFishTip);
+    grid.appendChild(card);
+  });
+}
+
+let activeFishFilter='all';
+function filterFish(f,btn){
+  activeFishFilter=f;
+  document.querySelectorAll('.fish-filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const cards=document.querySelectorAll('.fish-card');
+  let visible=0;
+  cards.forEach(c=>{
+    const show = f==='all' || c.dataset['s_'+f]==='1';
+    c.classList.toggle('hidden',!show);
+    if(show)visible++;
+  });
+  document.getElementById('no-results').style.display=visible?'none':'block';
+}
+
+// TOOLTIP
+const tooltip=document.getElementById('fish-tooltip');
+function seasonTag(s){ const map={spring:'🌸 Spring',summer:'☀️ Summer',fall:'🍂 Fall',winter:'❄️ Winter',any:'🌍 Any'}; const cls={spring:'sp',summer:'su',fall:'fa',winter:'wi',any:'any'}; return`<span class="${cls[s]||'any'}">${map[s]||s}</span>`; }
+function diffPips(d){ if(d===0)return'<span style="color:#60a040;font-size:13px;">Crab Pot (no minigame)</span>'; let h='<div class="tt-diff">'; for(let i=1;i<=10;i++)h+=`<div class="diff-pip ${i<=d?'diff-filled':'diff-empty'}"></div>`; return h+'</div>'; }
+
+function showFishTip(fish,e){
+  const isLeg=fish.tags.includes('legendary');
+  const isCrab=fish.tags.includes('crabpot');
+  const sHTML=fish.seasons.includes('any')?seasonTag('any'):fish.seasons.map(seasonTag).join(' ');
+  let html=`<div class="tt-name${isLeg?' legendary-name':''}">${fish.emoji} ${fish.name}</div>`;
+  html+=`<div class="tt-row"><span class="tt-icon">📍</span><span class="tt-label">Where:</span><span class="tt-val">${fish.location}</span></div>`;
+  html+=`<div class="tt-row"><span class="tt-icon">🗓️</span><span class="tt-label">Season:</span><span class="tt-val tt-season">${sHTML}</span></div>`;
+  if(!isCrab){
+    html+=`<div class="tt-row"><span class="tt-icon">🕐</span><span class="tt-label">Time:</span><span class="tt-val">${fish.time}</span></div>`;
+    html+=`<div class="tt-row"><span class="tt-icon">🌦️</span><span class="tt-label">Weather:</span><span class="tt-val">${fish.weather}</span></div>`;
+  }
+  html+=`<hr class="tt-divider">`;
+  html+=`<div class="tt-row"><span class="tt-icon">💰</span><span class="tt-label">Sells for:</span><span class="tt-val">${fish.price}g base</span></div>`;
+  if(!isCrab){
+    html+=`<div class="tt-row"><span class="tt-icon">🎯</span><span class="tt-label">Difficulty:</span><span class="tt-val">${diffPips(fish.difficulty)}</span></div>`;
+  }
+  if(isLeg){
+    let lvl=fish.lvlReq>0?`Level ${fish.lvlReq}+ required. `:'';
+    html+=`<div style="margin-top:6px"><span class="legendary-badge">👑 LEGENDARY</span></div>`;
+    if(fish.note)html+=`<div style="margin-top:7px;font-size:13px;color:#c8a8e8;">💡 ${lvl}${fish.note}</div>`;
+  } else if(fish.note){
+    html+=`<div style="margin-top:7px;font-size:13px;color:#a0c8a0;">💡 ${fish.note}</div>`;
+  }
+  if(isCrab) html+=`<div style="margin-top:6px"><span class="crabpot-badge">🦞 CRAB POT</span></div>`;
+  tooltip.className='fish-tooltip'+(isLeg?' legendary-tip':'');
+  tooltip.innerHTML=html;
+  moveTip(e);
+  tooltip.classList.add('visible');
+}
+function moveTip(e){
+  const pad=14,tw=tooltip.offsetWidth||260,th=tooltip.offsetHeight||200;
+  let x=e.clientX+pad,y=e.clientY+pad;
+  if(x+tw>window.innerWidth-8)x=e.clientX-tw-pad;
+  if(y+th>window.innerHeight-8)y=e.clientY-th-pad;
+  tooltip.style.left=x+'px'; tooltip.style.top=y+'px';
+}
+function hideFishTip(){ tooltip.classList.remove('visible'); }
+
+// ── MOBILE TOUCH SUPPORT for fish cards ──
+document.addEventListener('touchstart',e=>{
+  const card=e.target.closest('.fish-card');
+  if(card){
+    e.preventDefault();
+    const idx=card.dataset.idx;
+    const fish=FISH[idx];
+    if(fish){
+      const rect=card.getBoundingClientRect();
+      const fakeEv={clientX:rect.left+rect.width/2,clientY:rect.top};
+      showFishTip(fish,fakeEv);
+    }
+  } else if(!e.target.closest('.fish-tooltip')){
+    hideFishTip();
+  }
+},{passive:false});
+
+// ── MOBILE TOUCH SUPPORT for seed tip cells ──
+document.addEventListener('touchstart',e=>{
+  const td=e.target.closest('td.has-tip');
+  if(td){
+    e.preventDefault();
+    const tip=td.dataset.seedTip; if(!tip)return;
+    tooltip.className='fish-tooltip';
+    tooltip.innerHTML=`<div style="font-size:14px;line-height:1.6;color:#e0f0e0;">${tip}</div>`;
+    const rect=td.getBoundingClientRect();
+    const fakeEv={clientX:rect.left+rect.width/2,clientY:rect.top};
+    moveTip(fakeEv);
+    tooltip.classList.add('visible');
+  }
+},{passive:false});
+
+// ── SEED TOOLTIP (for 1.6 special-source crops) ──
+document.addEventListener('mouseover',e=>{
+  const td=e.target.closest('td.has-tip');
+  if(!td)return;
+  const tip=td.dataset.seedTip; if(!tip)return;
+  tooltip.className='fish-tooltip';
+  tooltip.innerHTML=`<div style="font-size:14px;line-height:1.6;color:#e0f0e0;">${tip}</div>`;
+  tooltip.classList.add('visible');
+  moveTip(e);
+});
+document.addEventListener('mousemove',e=>{
+  if(e.target.closest('td.has-tip'))moveTip(e);
+});
+document.addEventListener('mouseout',e=>{
+  if(e.target.closest('td.has-tip'))hideFishTip();
+});
+
+// INIT
+renderAll();
+buildFishGrid();
+buildBundles();
+buildGifts();
+</script>
+</body>
+</html>
