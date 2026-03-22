@@ -14,9 +14,8 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Valley Almanac — Stardew Fan Guide">
 <meta name="twitter:description" content="Interactive crops, fishing, bundle tracker & gift guide for Stardew Valley 1.6.">
-<!-- Update these two with your real URL once hosted -->
-<meta property="og:url" content="https://valleyalmanac.com/">
-<link rel="canonical" href="https://valleyalmanac.com/">
+<meta property="og:url" content="https://valleyalmanac.netlify.app/">
+<link rel="canonical" href="https://valleyalmanac.netlify.app/">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap');
 :root{
@@ -230,6 +229,29 @@ td.has-tip::after{content:'ℹ️';font-size:11px;margin-left:4px;opacity:.7;ver
 
 .no-results{text-align:center;font-size:18px;color:#556;padding:40px;display:none;}
 .footer{text-align:center;font-size:13px;color:rgba(255,255,255,.4);margin-top:14px;padding-bottom:14px;}
+.footer a{color:rgba(255,255,255,.45);text-decoration:underline;text-underline-offset:3px;}
+.footer a:hover{color:rgba(255,255,255,.7);}
+
+/* Ko-fi button */
+.kofi-btn{display:inline-flex;align-items:center;gap:7px;background:#ff5e5b;color:#fff;font-family:'Press Start 2P',monospace;font-size:7px;padding:9px 14px;border-radius:6px;text-decoration:none;border:none;cursor:pointer;transition:all .18s;margin:10px 4px 4px;}
+.kofi-btn:hover{background:#ff3a37;transform:translateY(-2px);box-shadow:0 4px 14px rgba(255,94,91,.4);}
+
+/* Feedback modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:10000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal-box{background:#1a1a2e;border:2px solid rgba(100,160,255,.3);border-radius:12px;padding:28px;max-width:440px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.6);}
+.modal-box h2{font-family:'Press Start 2P',monospace;font-size:10px;color:#ffe97a;margin-bottom:16px;line-height:1.5;}
+.modal-box label{display:block;font-family:'Press Start 2P',monospace;font-size:7px;color:#a0b8d0;margin:12px 0 5px;}
+.modal-box input,.modal-box textarea,.modal-box select{width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(100,160,255,.25);border-radius:5px;color:#e0f0ff;font-family:'VT323',monospace;font-size:17px;padding:8px 10px;outline:none;transition:border-color .15s;}
+.modal-box input:focus,.modal-box textarea:focus{border-color:rgba(100,160,255,.6);}
+.modal-box textarea{resize:vertical;min-height:90px;}
+.modal-btn-row{display:flex;gap:10px;margin-top:18px;justify-content:flex-end;}
+.modal-submit{font-family:'Press Start 2P',monospace;font-size:7px;padding:9px 14px;background:#2a6a10;color:#c0ffb0;border:2px solid #60c030;border-radius:5px;cursor:pointer;transition:all .15s;}
+.modal-submit:hover{background:#3a8a18;}
+.modal-cancel{font-family:'Press Start 2P',monospace;font-size:7px;padding:9px 14px;background:rgba(255,255,255,.06);color:#aaa;border:2px solid rgba(255,255,255,.15);border-radius:5px;cursor:pointer;transition:all .15s;}
+.modal-cancel:hover{background:rgba(255,255,255,.12);}
+.modal-success{text-align:center;padding:16px 0;font-size:18px;color:#a0ffb0;display:none;}
+
 /* ════════════════════════════════
    BUNDLES SECTION
 ════════════════════════════════ */
@@ -467,14 +489,41 @@ td.has-tip::after{content:'ℹ️';font-size:11px;margin-left:4px;opacity:.7;ver
 
 <div class="footer">
   ✦ Data from the Stardew Valley Wiki ✦ Verified for v1.6 ✦ Last updated March 2026 ✦<br>
-  ✦ Crop G/Day: Day 1 planting, 28-day season, base quality unless modifiers active ✦ Speed mods only affect initial grow time, not regrow ✦<br>
-  <span style="margin-top:8px;display:inline-block;">
-    💌 <a href="mailto:feedback@valleyalmanac.com" style="color:rgba(255,255,255,.45);text-decoration:underline;text-underline-offset:3px;">Spotted an error or have a suggestion?</a>
-    &nbsp;·&nbsp; Created with ♥ for Pelican Town
-  </span><br><br>
+  ✦ Crop G/Day: Day 1 planting, 28-day season, base quality unless modifiers active ✦ Speed mods only affect initial grow time, not regrow ✦
+  <div style="margin:14px 0 10px;">
+    <a class="kofi-btn" href="https://ko-fi.com/johnmcmillion" target="_blank" rel="noopener">☕ Buy me a coffee</a>
+    <button class="kofi-btn" style="background:#1a4a8a;border-color:#3070c0;" onclick="openFeedback()">💌 Suggest a fix</button>
+  </div>
   <span style="color:rgba(255,255,255,.22);">Stardew Valley is created by ConcernedApe. Valley Almanac is an unofficial fan resource and is not affiliated with or endorsed by ConcernedApe.</span>
 </div>
 </div><!-- /page-wrap -->
+
+<!-- FEEDBACK MODAL -->
+<div class="modal-overlay" id="feedback-modal" onclick="closeFeedbackOnOverlay(event)">
+  <div class="modal-box">
+    <h2>💌 Suggest a Fix or Feature</h2>
+    <form name="feedback" method="POST" netlify netlify-honeypot="bot-field" onsubmit="handleFeedbackSubmit(event)">
+      <input type="hidden" name="form-name" value="feedback">
+      <p style="display:none;"><input name="bot-field"></p>
+      <label for="fb-type">Type</label>
+      <select name="type" id="fb-type">
+        <option value="error">🐛 Data error</option>
+        <option value="missing">➕ Missing content</option>
+        <option value="feature">✨ Feature request</option>
+        <option value="other">💬 Other</option>
+      </select>
+      <label for="fb-msg">Message</label>
+      <textarea name="message" id="fb-msg" placeholder="Tell me what's wrong or what you'd like to see..." required></textarea>
+      <label for="fb-email">Your email <span style="font-family:VT323,monospace;font-size:14px;color:#667;font-weight:normal;">(optional — only if you want a reply)</span></label>
+      <input type="email" name="email" id="fb-email" placeholder="you@example.com">
+      <div class="modal-btn-row">
+        <button type="button" class="modal-cancel" onclick="closeFeedback()">Cancel</button>
+        <button type="submit" class="modal-submit">Send ✦</button>
+      </div>
+      <div class="modal-success" id="fb-success">✅ Thanks! I'll look into it. 🌱</div>
+    </form>
+  </div>
+</div>
 
 <!-- ══════════════════════════════════════════
      BUNDLES SECTION
@@ -1236,7 +1285,24 @@ document.addEventListener('touchstart',e=>{
   }
 },{passive:false});
 
-// ── SEED TOOLTIP (for 1.6 special-source crops) ──
+// ── FEEDBACK MODAL ──
+function openFeedback(){document.getElementById('feedback-modal').classList.add('open');document.body.style.overflow='hidden';}
+function closeFeedback(){document.getElementById('feedback-modal').classList.remove('open');document.body.style.overflow='';}
+function closeFeedbackOnOverlay(e){if(e.target===document.getElementById('feedback-modal'))closeFeedback();}
+function handleFeedbackSubmit(e){
+  e.preventDefault();
+  const form=e.target;
+  fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body:new URLSearchParams(new FormData(form)).toString()})
+  .then(()=>{
+    form.querySelectorAll('input,textarea,select,button').forEach(el=>el.style.display='none');
+    document.getElementById('fb-success').style.display='block';
+    setTimeout(closeFeedback,2500);
+  })
+  .catch(()=>alert('Something went wrong — try again!'));
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeFeedback();});
+
 document.addEventListener('mouseover',e=>{
   const td=e.target.closest('td.has-tip');
   if(!td)return;
