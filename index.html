@@ -1251,6 +1251,22 @@ function moveTip(e){
   let x=e.clientX+pad,y=e.clientY+pad;
   if(x+tw>window.innerWidth-8)x=e.clientX-tw-pad;
   if(y+th>window.innerHeight-8)y=e.clientY-th-pad;
+  if(x<8)x=8;
+  tooltip.style.left=x+'px'; tooltip.style.top=y+'px';
+}
+function placeTipAtRect(rect){
+  // For touch: centre above the element, clamped within viewport
+  const tw=tooltip.offsetWidth||280,th=tooltip.offsetHeight||220;
+  const vw=window.innerWidth, vh=window.innerHeight;
+  let x=rect.left+rect.width/2-tw/2;
+  let y=rect.top-th-10;
+  // clamp horizontally
+  if(x<8)x=8;
+  if(x+tw>vw-8)x=vw-tw-8;
+  // if not enough room above, show below
+  if(y<8)y=rect.bottom+10;
+  // last resort: centre vertically
+  if(y+th>vh-8)y=Math.max(8,vh/2-th/2);
   tooltip.style.left=x+'px'; tooltip.style.top=y+'px';
 }
 function hideFishTip(){ tooltip.classList.remove('visible'); }
@@ -1263,9 +1279,12 @@ document.addEventListener('touchstart',e=>{
     const idx=card.dataset.idx;
     const fish=FISH[idx];
     if(fish){
-      const rect=card.getBoundingClientRect();
-      const fakeEv={clientX:rect.left+rect.width/2,clientY:rect.top};
-      showFishTip(fish,fakeEv);
+      showFishTip(fish,{clientX:0,clientY:0}); // render content first
+      tooltip.classList.add('visible');
+      // position after content is rendered so we have real dimensions
+      requestAnimationFrame(()=>{
+        placeTipAtRect(card.getBoundingClientRect());
+      });
     }
   } else if(!e.target.closest('.fish-tooltip')){
     hideFishTip();
@@ -1280,10 +1299,10 @@ document.addEventListener('touchstart',e=>{
     const tip=td.dataset.seedTip; if(!tip)return;
     tooltip.className='fish-tooltip';
     tooltip.innerHTML=`<div style="font-size:14px;line-height:1.6;color:#e0f0e0;">${tip}</div>`;
-    const rect=td.getBoundingClientRect();
-    const fakeEv={clientX:rect.left+rect.width/2,clientY:rect.top};
-    moveTip(fakeEv);
     tooltip.classList.add('visible');
+    requestAnimationFrame(()=>{
+      placeTipAtRect(td.getBoundingClientRect());
+    });
   }
 },{passive:false});
 
