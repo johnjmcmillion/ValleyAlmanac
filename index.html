@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Valley Almanac — Fishing & Farming, A Stardew Fan Guide</title>
-<meta name="description" content="The complete unofficial Stardew Valley fan guide. Interactive crop planner with fertilizer modifiers, full fishing database, Community Center bundle tracker with progress saving, and villager gift guide. Data verified for v1.6. ">
+<meta name="description" content="The complete unofficial Stardew Valley fan guide. Interactive crop planner with fertilizer modifiers, full fishing database, Community Center bundle tracker with progress saving, and villager gift guide. Data verified for v1.6.">
 <meta name="keywords" content="Stardew Valley, crop guide, fishing guide, community center bundles, gift guide, farming, Stardew Valley 1.6, valley almanac">
 <meta name="author" content="Valley Almanac">
 <meta property="og:title" content="Valley Almanac — Stardew Fan Guide">
@@ -330,6 +330,56 @@ td.has-tip::after{content:'ℹ️';font-size:11px;margin-left:4px;opacity:.7;ver
 .fish-tooltip ul{margin:6px 0 0 16px;padding:0;}
 .fish-tooltip li{margin-bottom:3px;}
 .fish-tooltip b{color:#ffe97a;}
+/* ── READABLE FONT MODE ── */
+body.readable-font{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif !important;letter-spacing:0;}
+body.readable-font table{font-size:15px;}
+body.readable-font td{font-size:15px;letter-spacing:0;}
+body.readable-font td.name{font-size:16px;}
+body.readable-font .fish-name{font-size:13px;}
+/* ── READABLE FONT MODE ──
+   Override every hardcoded Press Start 2P declaration.
+   Keep pixel font ONLY on the main title and section nav buttons.
+   Switch everything else to system sans-serif. */
+body.readable-font{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif !important;letter-spacing:0;}
+body.readable-font table{font-size:15px;}
+body.readable-font td{font-size:15px;letter-spacing:0;}
+body.readable-font td.name{font-size:16px;}
+
+/* Keep pixel font on the main title only */
+body.readable-font h1.title-main,
+body.readable-font .title-main{font-family:'Press Start 2P',monospace !important;}
+
+/* Switch EVERYTHING else that has hardcoded Press Start 2P */
+body.readable-font .nav-btn,
+body.readable-font .tab-btn,
+body.readable-font .mod-btn,
+body.readable-font .modifier-panel h3,
+body.readable-font .season-header,
+body.readable-font thead th,
+body.readable-font .badge,
+body.readable-font .legend h3,
+body.readable-font .fish-filter-label,
+body.readable-font .fish-filter-btn,
+body.readable-font .fish-name,
+body.readable-font .tt-name,
+body.readable-font .legendary-badge,
+body.readable-font .crabpot-badge,
+body.readable-font .fish-section-header,
+body.readable-font .kofi-btn,
+body.readable-font .modal-box h2,
+body.readable-font .modal-box label,
+body.readable-font .modal-submit,
+body.readable-font .modal-cancel,
+body.readable-font .room-header,
+body.readable-font .bundle-name,
+body.readable-font .bundle-reward-tag,
+body.readable-font .bundles-reset,
+body.readable-font .v-name,
+body.readable-font .v-loves-label,
+body.readable-font .gift-universal-banner h3{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif !important;letter-spacing:0 !important;}
+
+.font-toggle{position:fixed;bottom:18px;right:18px;z-index:9000;font-family:'Press Start 2P',monospace;font-size:6px;padding:8px 10px;border:2px solid rgba(255,255,255,.25);border-radius:6px;background:rgba(26,14,46,.85);color:rgba(255,255,255,.6);cursor:pointer;transition:all .18s;backdrop-filter:blur(4px);}
+.font-toggle:hover{border-color:rgba(255,233,122,.5);color:#ffe97a;}
 </style>
 </head>
 <body>
@@ -490,7 +540,7 @@ td.has-tip::after{content:'ℹ️';font-size:11px;margin-left:4px;opacity:.7;ver
 <div class="fish-tooltip" id="fish-tooltip"></div>
 
 <div class="footer">
-  ✦ Data from the Stardew Valley Wiki ✦ Verified for v1.6 ✦ Last updated March 2026 ✦<br>
+  ✦ Data from the Stardew Valley Wiki ✦ Verified for v1.6 ✦ Last updated March 2026 ✦ <span style="color:rgba(255,255,255,.3);">Site v1.2</span><br>
   ✦ Crop G/Day: Day 1 planting, 28-day season, base quality unless modifiers active ✦ Speed mods only affect initial grow time, not regrow ✦
   <div style="margin:14px 0 10px;">
     <a class="kofi-btn" href="https://ko-fi.com/johnmcmillion" target="_blank" rel="noopener">☕ Buy me a coffee</a>
@@ -499,6 +549,8 @@ td.has-tip::after{content:'ℹ️';font-size:11px;margin-left:4px;opacity:.7;ver
   <span style="color:rgba(255,255,255,.22);">Stardew Valley is created by ConcernedApe. Valley Almanac is an unofficial fan resource and is not affiliated with or endorsed by ConcernedApe.</span>
 </div>
 </div><!-- /page-wrap -->
+
+<button class="font-toggle" id="font-toggle-btn" onclick="toggleFont()" title="Toggle readable font">Aa</button>
 
 <!-- FEEDBACK MODAL -->
 <div class="modal-overlay" id="feedback-modal" onclick="closeFeedbackOnOverlay(event)">
@@ -1340,6 +1392,21 @@ document.addEventListener('mousemove',e=>{
 document.addEventListener('mouseout',e=>{
   if(e.target.closest('td.has-tip'))hideFishTip();
 });
+
+// ── FONT TOGGLE ──
+function toggleFont(){
+  const readable=document.body.classList.toggle('readable-font');
+  localStorage.setItem('va-font',readable?'readable':'pixel');
+  document.getElementById('font-toggle-btn').textContent=readable?'✦':'Aa';
+}
+// Apply saved preference on load
+(function(){
+  if(localStorage.getItem('va-font')==='readable'){
+    document.body.classList.add('readable-font');
+    const btn=document.getElementById('font-toggle-btn');
+    if(btn)btn.textContent='✦';
+  }
+})();
 
 // INIT
 renderAll();
